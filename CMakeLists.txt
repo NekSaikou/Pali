@@ -8,7 +8,7 @@ project(
 
 set(CMAKE_CXX_STANDARD 17)
 
-file(GLOB_RECURSE FILES src/*.cpp src/Core/*.cpp)
+file(GLOB_RECURSE SRC_FILES src/*.cpp src/Core/*.cpp)
 
 add_compile_options(
   -O3
@@ -19,4 +19,4 @@ add_compile_options(
 
 add_link_options(-flto)
 
-add_executable(Fodder ${FILES})
+add_executable(Fodder ${SRC_FILES})

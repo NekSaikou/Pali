@@ -14,11 +14,17 @@ constexpr uint8_t CASTLING_UPDATE[64] {
 void Position::addPiece(Color col, Piece pc, Square sq) {
   setBit(this->pieces[pc], sq);
   setBit(this->colors[col], sq);
+
+  updateHash(getPieceKey(pc, sq));
+  updateHash(getColorKey(col, sq));
 }
 
 void Position::clearPiece(Color col, Piece pc, Square sq) {
   popBit(this->pieces[pc], sq);
   popBit(this->colors[col], sq);
+
+  updateHash(getPieceKey(pc, sq));
+  updateHash(getColorKey(col, sq));
 }
 
 void Position::movePiece(Color col, Piece pc, Square from, Square to) {
@@ -27,8 +33,12 @@ void Position::movePiece(Color col, Piece pc, Square from, Square to) {
 }
 
 void Position::updateRights(Square from, Square to) {
+  updateHash(getCastleKey(this->rights));
+
   this->rights &= CASTLING_UPDATE[from];
   this->rights &= CASTLING_UPDATE[to];
+
+  updateHash(getCastleKey(this->rights));
 }
 
 void Position::makeMove(Move mv) {
@@ -60,6 +70,7 @@ void Position::makeMove(Move mv) {
 
   // En passant expired
   if (this->epSQ != NO_SQ) {
+    this->updateHash(getEPKey(epSQ));
     this->epSQ = NO_SQ;
   }
 
@@ -139,6 +150,8 @@ Position::Position(const std::string &fen) {
   // Parse side to move
   // This token should always contain only either 'w' or 'b'
   this->stm = tokens[1][0] == 'w' ? White : Black;
+  // update hash if it's white to move
+  if (this->stm == White) updateHash(getSTMKey()); 
 
   // Parse castling rights
   for (char c : tokens[2]) {
@@ -149,10 +162,13 @@ Position::Position(const std::string &fen) {
       case 'q': this->rights |= C_BQ; break;
     }
   }
+  updateHash(getCastleKey(this->rights));
 
   // Parse en passant
   if (tokens[3][0] == '-') this->epSQ = NO_SQ;
   else this->epSQ = squareIx(7 - (tokens[3][1] - '1'), tokens[3][0] - 'a');
+  // Update hash if there's en passant square
+  if (this->epSQ != NO_SQ) updateHash(getEPKey(this->epSQ));
 
   // Parse half move clock
   this->hmc = std::stoi(tokens[4]);

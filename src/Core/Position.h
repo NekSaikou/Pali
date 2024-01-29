@@ -10,6 +10,7 @@
 #include "BasicTypes.h"
 #include "Bitboard.h"
 #include "Moves.h"
+#include "Zobrist.h"
 #include "../Util.h"
 
 // Helper lookup table for pins and check mask generation
@@ -26,6 +27,8 @@ private:
   Color stm;
   Square epSQ;
   uint8_t rights = 0;
+
+  HashKey hash = 0; // zobrist key
 
   uint8_t hmc; // half move clock
   int phase = 0; // keep track of game phase (midgame/endgame)
@@ -45,6 +48,11 @@ public:
   void updateRights(Square from, Square to);
 
   void makeMove(Move mv);
+
+  void inline updateHash(HashKey key) {
+    this->hash ^= key;
+  }
+
 
   [[nodiscard]] Bitboard sqAttackers(Square sq, Bitboard occ);
 
@@ -82,6 +90,11 @@ public:
 
   inline void changeSide() {
     this->stm = static_cast<Color>(this->stm ^ 1);
+    this->updateHash(getSTMKey());
+  }
+
+  [[nodiscard]] inline HashKey getHash() {
+    return this->hash;
   }
 
   [[nodiscard]] inline uint8_t halfMove() {
