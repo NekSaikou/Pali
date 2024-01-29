@@ -1,0 +1,103 @@
+#pragma once
+
+#include <cstdint>
+#include <string>
+#include <utility>
+#include <cctype>
+#include <iostream>
+
+#include "Attacks.h"
+#include "BasicTypes.h"
+#include "Bitboard.h"
+#include "Moves.h"
+#include "../Util.h"
+
+// Helper lookup table for pins and check mask generation
+extern Bitboard BETWEEN_SQ[64][64];
+void initBetweenSQ();
+
+const inline std::string START_POS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
+class Position {
+private:
+  Bitboard pieces[6] = {};
+  Bitboard colors[2] = {};
+
+  Color stm;
+  Square epSQ;
+  uint8_t rights = 0;
+
+  uint8_t hmc; // half move clock
+  int phase = 0; // keep track of game phase (midgame/endgame)
+
+  bool isInCheck = false;
+public:
+  // The board constructor uses FEN as input
+  // all information up to half move clock is required
+  Position(const std::string &fen);
+
+  void addPiece(Color col, Piece pc, Square sq);
+
+  void clearPiece(Color col, Piece pc, Square sq);
+
+  void movePiece(Color col, Piece pc, Square from, Square to);
+
+  void updateRights(Square from, Square to);
+
+  void makeMove(Move mv);
+
+  [[nodiscard]] Bitboard sqAttackers(Square sq, Bitboard occ);
+
+  [[nodiscard]] inline Piece pieceOnSQ(Square sq) {
+    for (int pc = Pawn; pc <= King; pc++) {
+      if (getBit(this->pieces[pc], sq)) return static_cast<Piece>(pc);
+    }
+    return NO_PC;
+  }
+
+  [[nodiscard]] inline Bitboard getPieceBB(Piece pc) {
+    return this->pieces[pc];
+  }
+
+  [[nodiscard]] inline Bitboard getColorBB(Color col) {
+    return this->colors[col];
+  }
+
+  [[nodiscard]] inline Bitboard getColoredPieceBB(Color col, Piece pc) {
+    return this->colors[col] & this->pieces[pc];
+  }
+
+  // return a bitboard of all pieces
+  [[nodiscard]] inline Bitboard all() {
+    return this->colors[White] | this->colors[Black];
+  }
+
+  [[nodiscard]] inline Color sideToMove() {
+    return this->stm;
+  }
+
+  [[nodiscard]] inline Color oppSideToMove() {
+    return static_cast<Color>(this->stm ^ 1);
+  }
+
+  inline void changeSide() {
+    this->stm = static_cast<Color>(this->stm ^ 1);
+  }
+
+  [[nodiscard]] inline uint8_t halfMove() {
+    return this->hmc;
+  }
+
+  // Move generation function
+  // Defined in Movegen.cpp
+  // Quiet only option specifically for quiescence search
+  template<bool NoisyOnly>
+  void genLegal(MoveList &ml);
+
+private:
+  // Helper functions for move generation
+  // These aren't used anywhere else so they can remain private
+  [[nodiscard]] std::pair<Bitboard, int> genCheckMask();
+  [[nodiscard]] std::pair<Bitboard, Bitboard> genPinMask();
+  [[nodiscard]] std::pair<Square, Square> pawnPush(Square from);
+};
