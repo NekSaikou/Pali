@@ -12,6 +12,7 @@
 #include "Moves.h"
 #include "Zobrist.h"
 #include "../Util.h"
+#include "../Search/NNUE/Network.h"
 
 // Helper lookup table for pins and check mask generation
 extern Bitboard BETWEEN_SQ[64][64];
@@ -34,6 +35,8 @@ private:
   int phase = 0; // keep track of game phase (midgame/endgame)
 
   bool isInCheck = false;
+
+  Accumulator acc[2];
 public:
   // The board constructor uses FEN as input
   // all information up to half move clock is required
@@ -41,7 +44,11 @@ public:
 
   void addPiece(Color col, Piece pc, Square sq);
 
+  void nnueAdd(Color col, Piece pc, Square sq);
+
   void clearPiece(Color col, Piece pc, Square sq);
+
+  void nnueClear(Color col, Piece pc, Square sq);
 
   void movePiece(Color col, Piece pc, Square from, Square to);
 
@@ -101,11 +108,21 @@ public:
     return this->hmc;
   }
 
+  [[nodiscard]] bool inline inCheck() {
+    return this->getColorBB(this->oppSideToMove()) 
+         & sqAttackers(
+            lsb(this->getColoredPieceBB(this->sideToMove(), King)), 
+            this->all());
+  }
+
   // Move generation function
   // Defined in Movegen.cpp
   // Quiet only option specifically for quiescence search
   template<bool NoisyOnly>
   void genLegal(MoveList &ml);
+
+  // Evaluation function
+  int16_t evaluate();
 
 private:
   // Helper functions for move generation

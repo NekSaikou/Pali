@@ -8,7 +8,12 @@ project(
 
 set(CMAKE_CXX_STANDARD 17)
 
-file(GLOB_RECURSE SRC_FILES src/*.cpp src/Core/*.cpp)
+file(GLOB_RECURSE SRC_FILES 
+  src/*.cpp 
+  src/Core/*.cpp
+  src/Search/*.cpp
+  src/Search/NNUE/*.cpp
+  )
 
 add_compile_options(
   -O3

@@ -17,6 +17,18 @@ void Position::addPiece(Color col, Piece pc, Square sq) {
 
   updateHash(getPieceKey(pc, sq));
   updateHash(getColorKey(col, sq));
+
+  nnueAdd(col, pc, sq);
+}
+
+void Position::nnueAdd(Color col, Piece pc, Square sq) {
+  auto [whiteIx, blackIx] = nnueIx(col, pc, sq);
+  auto whiteAdd = NNUE.inputWeights[whiteIx].val;
+  auto blackAdd = NNUE.inputWeights[blackIx].val;
+    for (int i = 0; i < HIDDEN_SIZE; i++) {
+        this->acc[0].val[i] += whiteAdd[i];
+        this->acc[1].val[i] += blackAdd[i];
+    }
 }
 
 void Position::clearPiece(Color col, Piece pc, Square sq) {
@@ -25,6 +37,18 @@ void Position::clearPiece(Color col, Piece pc, Square sq) {
 
   updateHash(getPieceKey(pc, sq));
   updateHash(getColorKey(col, sq));
+
+  nnueClear(col, pc, sq);
+}
+
+void Position::nnueClear(Color col, Piece pc, Square sq) {
+  auto [whiteIx, blackIx] = nnueIx(col, pc, sq);
+  auto whiteSub = NNUE.inputWeights[whiteIx].val;
+  auto blackSub = NNUE.inputWeights[blackIx].val;
+    for (int i = 0; i < HIDDEN_SIZE; i++) {
+        this->acc[0].val[i] -= whiteSub[i];
+        this->acc[1].val[i] -= blackSub[i];
+    }
 }
 
 void Position::movePiece(Color col, Piece pc, Square from, Square to) {
@@ -82,6 +106,7 @@ void Position::makeMove(Move mv) {
   // Add new en passant target in case of double push
   if (mv.isDP()) {
     this->epSQ = epSQUpdate;
+    this->updateHash(getEPKey(epSQ));
   }
 
   // Move the rook when castling
@@ -113,6 +138,10 @@ Bitboard Position::sqAttackers(Square sq, Bitboard occ) {
 }
 
 Position::Position(const std::string &fen) {
+  // Set the NNUE accumulators to initial bias
+  this->acc[0].reset();
+  this->acc[1].reset();
+
   // Trim the FEN then break it into tokens
   std::vector<std::string> tokens = splitWS(trim(fen));
 
@@ -172,4 +201,22 @@ Position::Position(const std::string &fen) {
 
   // Parse half move clock
   this->hmc = std::stoi(tokens[4]);
+}
+
+int16_t Position::evaluate() {
+  const int16_t *us = this->acc[this->sideToMove()].val;
+  const int16_t *them = this->acc[this->oppSideToMove()].val;
+
+  int32_t output = 0; // Need to be 32 bits to avoid overflow
+
+  for (int i = 0; i < HIDDEN_SIZE; i++) {
+      output += screlu(us[i])   * static_cast<int32_t>(NNUE.outputWeights[0].val[i]);
+      output += screlu(them[i]) * static_cast<int32_t>(NNUE.outputWeights[1].val[i]);
+  }
+
+  output /= QA;
+
+  output += NNUE.outputBias;
+
+  return output * SCALE / QAB;
 }

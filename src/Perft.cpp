@@ -45,7 +45,9 @@ void perft(Position &pos, int depth) {
 
   std::cout << "time taken: "
             << getTimeMs() - startTime
-            << " nodes: "
+            << "\nnodes: "
             << nodesTotal 
+            << "\nnps: "
+            << nodesTotal / (getTimeMs() - startTime) * 1000
             << std::endl;
 }
