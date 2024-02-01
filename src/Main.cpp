@@ -18,7 +18,7 @@ int main (int argc, char *argv[]) {
   initZobrist();
   initNNUE();
 
-  if (DEBUG) {
+  if constexpr (DEBUG) {
     Position pos = Position("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     pos.makeMove(Move(e2, e4, DoublePush, Pawn));
     pos.makeMove(Move(e7, e5, DoublePush, Pawn));

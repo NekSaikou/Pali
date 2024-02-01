@@ -19,22 +19,16 @@ struct PVTable {
 
 struct SearchStack { // Reset after each search
   int ply = 0; 
-  // Used to keep track of repetition
-  std::vector<HashKey> playedPos;
 
   inline void push(HashKey hash) {
-    this->playedPos.push_back(hash);
     this->ply++;
   }
 
   inline void pop() {
-    this->playedPos.pop_back();
     this->ply--;
   }
 
   inline void reset() {
-    // TODO: Proper 3 fold detection
-    this->playedPos.clear();
     this->ply = 0;
   }
 };
@@ -45,7 +39,7 @@ struct SearchInfo { // UCI control
   Time timelim = UINT64_MAX;
   int depth = 100;
   uint64_t nodeslim = UINT64_MAX;
-  int movestogo = 1;
+  int movestogo = 25;
 
   // UCI outputs
   int seldepth = 0;
@@ -109,15 +103,6 @@ private:
     if (td.ss.ply == 0) return false; // Can't draw on first move
 
     if (pos.halfMove() >= 100) return true; // Draw by 50 moves rule
-
-    // Draw by threefold repetition
-    for (int i = td.ss.playedPos.size() - 2; i >= pos.halfMove(); i -= 2) {
-      int repetition = 0;
-
-      if (td.ss.playedPos[i] == pos.getHash()) repetition++;
-
-      if (repetition >= 3) return true;
-    } 
 
     return false;
   }

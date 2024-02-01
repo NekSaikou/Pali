@@ -27,5 +27,3 @@ void command_setoption(Options &options);
 void command_go(Search &searcher, Options &options);
 
 void command_stop(Search &searcher);
-
-void stopHelperThreads();

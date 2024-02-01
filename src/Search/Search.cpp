@@ -73,8 +73,8 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
     td.info.nodes++; // Increment nodes count
 
     // Mate distance pruning
-    alpha = std::max(static_cast<int>(alpha), static_cast<int>(-CHECKMATE + td.ss.ply));
-    beta = std::min(static_cast<int>(beta), static_cast<int>(CHECKMATE - td.ss.ply - 1));
+    alpha = std::max(alpha, static_cast<int16_t>(-CHECKMATE + td.ss.ply));
+    beta = std::min(beta, static_cast<int16_t>(CHECKMATE - td.ss.ply));
     if (alpha >= beta) return alpha;
 
     // Check extension
@@ -101,7 +101,8 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
 
     // PVS
     EvalScore score = NO_SCORE;
-    if (movesSearched == 0) {
+    // TODO: Change `true` to `movesSearched == 0` after move ordering
+    if (true) {
       score = -negamax(posCopy, depth - 1, -beta, -alpha) ;
     } else {
       EvalScore zwsScore = -negamax(posCopy, depth- 1, -alpha - 1, -alpha);

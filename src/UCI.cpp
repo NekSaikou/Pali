@@ -7,9 +7,6 @@ static std::string input;
 // Main search thread
 std::thread mainThread;
 
-// Helper search threads
-std::vector<std::thread> helperThreads;
-
 void uciLoop() {
   std::cout << "Fodder "
             << "by Nek"
@@ -104,7 +101,6 @@ void command_position(Search &searcher) {
         &&  mv.getTo() == to) {
           if (mv.promoType() == promo || promo == NO_PC) {
             // TODO: Make a proper 3 fold detection
-            // searcher.td.ss.playedPos.push_back(searcher.td.rootPos->getHash());
             searcher.td.rootPos->makeMove(mv);
           }
         }
@@ -125,7 +121,7 @@ void command_setoption(Options &options) {
 }
 
 void command_go(Search &searcher, Options &options) {
-  int mtg = 25;
+  int mtg = 30;
   int depth = 40;
   uint64_t nodes = UINT64_MAX;
   Time wtime = UINT64_MAX;
@@ -148,13 +144,11 @@ void command_go(Search &searcher, Options &options) {
   Time time = searcher.td.rootPos->sideToMove() == White ? wtime : btime;
   Time inc = searcher.td.rootPos->sideToMove() == White ? winc : binc;
 
-  Time allocatedTime = time/mtg + 3*inc + 4;
+  Time allocatedTime = time/mtg + 2*inc + 5;
 
   searcher.td.info.depth = depth;
   searcher.td.info.nodeslim = nodes;
   searcher.td.info.timelim = allocatedTime;
-
-  stopHelperThreads();
 
   // Join main thread if there's a previous one running
   if (mainThread.joinable()) 
@@ -162,33 +156,11 @@ void command_go(Search &searcher, Options &options) {
 
   // Spawn main thread
   mainThread = std::thread( [&searcher] { searcher.go<true>(); });
-
-  // Spawn helper threads
-  for (int i = 0; i < options.threads; i++) {
-    // Create searcher clone
-    Search helperSearcher = searcher;
-
-    // Push each new thread
-    helperThreads.emplace_back(
-      std::thread( [&helperSearcher] { helperSearcher.go<false>(); } )
-    );
-  };
 }
 
 void command_stop(Search &searcher) {
   searcher.td.abort();
 
-  stopHelperThreads();
-
   if (mainThread.joinable()) 
       mainThread.join();
-}
-
-void stopHelperThreads() {
-  for (std::thread &thread : helperThreads) {
-    if (thread.joinable())
-        thread.join();
-  }
-
-  helperThreads.clear();
 }
