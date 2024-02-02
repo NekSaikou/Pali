@@ -107,7 +107,7 @@ public:
 class MoveList {
 private:
   Move moves[MAX_MOVE];
-  MoveScore scores[MAX_MOVE];
+  MoveScore scores[MAX_MOVE] = {};
   int length = 0;
 
 public:
@@ -128,6 +128,10 @@ public:
   void inline push(Move mv) {
     this->moves[this->length] = mv;
     this->length++;
+  };
+
+  [[nodiscard]] Move inline takeLast() {
+    return this->moves[--this->length];
   };
 
   void inline clear() {

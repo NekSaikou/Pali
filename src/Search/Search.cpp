@@ -83,7 +83,6 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
 
     // Leaf node or max ply exceeded
     if (depth == 0 || td.ss.ply >= MAX_PLY - 1) return qsearch(pos, alpha, beta);
-    // if (depth == 0 || td.ss.ply >= MAX_PLY - 1) return pos.evaluate();
 
     // Update stack and ply
     td.ss.push(pos.getHash());
@@ -92,18 +91,20 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   // Generate moves
   MoveList ml = MoveList();
   pos.genLegal<false>(ml);
+  scoreMoves(pos, ml);
 
   // Move loop starts
   int movesSearched = 0;
-  for (int i = 0; i < ml.getLength(); i++) {
-    Move mv = ml.getMove(i);
+  while (ml.getLength()) {
+    Move mv = pickMove(ml);
     Position posCopy = pos;
     posCopy.makeMove(mv);
 
+    movesSearched++;
+
     // PVS
     EvalScore score = NO_SCORE;
-    // TODO: Change `true` to `movesSearched == 0` after move ordering
-    if (true) {
+    if (movesSearched == 1) {
       score = -negamax(posCopy, depth - 1, -beta, -alpha) ;
     } else {
       EvalScore zwsScore = -negamax(posCopy, depth- 1, -alpha - 1, -alpha);
@@ -113,7 +114,6 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
         ? -negamax(posCopy, depth - 1, -beta, -alpha)
         : zwsScore;
     };
-    movesSearched++;
 
     // Node fails high
     if (score >= beta) {
@@ -138,7 +138,7 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   td.ss.pop();
 
   // Checkmate or stalemate
-  if (ml.getLength() == 0) return pos.inCheck() ? -CHECKMATE + td.ss.ply : 0;
+  if (movesSearched == 0) return pos.inCheck() ? -CHECKMATE + td.ss.ply : 0;
 
   return alpha;
 }
@@ -153,6 +153,7 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
     }
   }
 
+  // Start of node stuffs
   td.info.seldepth = std::max(td.info.seldepth, td.ss.ply);
 
   EvalScore eval = pos.evaluate();
@@ -186,6 +187,7 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
     alpha = std::max(alpha, eval);
   }
 
+  // End of node stuffs
   td.ss.ply--;
 
   return eval;

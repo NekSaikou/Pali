@@ -4,6 +4,7 @@
 #include <atomic>
 
 #include "../Core/Position.h"
+#include "Movepick.h"
 #include "../Util.h"
 
 using EvalScore = int16_t;
