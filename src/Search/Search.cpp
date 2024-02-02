@@ -165,7 +165,7 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
   // Only generate noisy moves
   MoveList ml = MoveList();
   pos.genLegal<true>(ml);
-  // scoreMoves(pos, ml);
+  scoreMoves(pos, ml);
 
   td.ss.ply++;
 
