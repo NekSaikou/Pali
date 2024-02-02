@@ -1,17 +1,12 @@
 #include "UCI.h"
-#include <cassert>
 
 // Input buffer
 static std::string input;
 
 // Main search thread
-std::thread mainThread;
+static std::thread mainThread;
 
 void uciLoop() {
-  std::cout << "Fodder "
-            << "by Nek"
-            << std::endl;
-
   // Initialize searcher object
   Position pos = Position(START_POS);
   std::atomic<bool> stop = false;
@@ -41,14 +36,13 @@ void uciLoop() {
 }
 
 void command_uci() {
-  std::cout << "id name Chariot" << std::endl
+  std::cout << "id name Fodder" << std::endl
             << "id author Nek" << std::endl 
             << "uciok" << std::endl;
 }
 
 void command_isready() {
   std::cout << "readyok" << std::endl;
-  std::vector<std::string> tokens = splitWS(input);
 }
 
 void command_ucinewgame(Search &searcher) {
@@ -95,8 +89,8 @@ void command_position(Search &searcher) {
       MoveList ml = MoveList();
       searcher.td.rootPos->genLegal<false>(ml);
 
-      for (int i = 0; i < ml.getLength(); i++) {
-        Move mv = ml.getMove(i);
+      for (int j = 0; j < ml.getLength(); j++) {
+        Move mv = ml.getMove(j);
         if (mv.getFrom() == from 
         &&  mv.getTo() == to) {
           if (mv.promoType() == promo || promo == NO_PC) {

@@ -47,6 +47,7 @@ void Search::go() {
 
   // Reset the search stack to prepare for next search
   td.ss.reset();
+  td.abort();
 }
 
 EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore beta) {
