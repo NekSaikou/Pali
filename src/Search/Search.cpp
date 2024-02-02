@@ -165,12 +165,13 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
   // Only generate noisy moves
   MoveList ml = MoveList();
   pos.genLegal<true>(ml);
+  // scoreMoves(pos, ml);
 
   td.ss.ply++;
 
   // Move loop starts
-  for (int i = 0; i < ml.getLength(); i++) {
-    Move mv = ml.getMove(i);
+  while (ml.getLength()) {
+    Move mv = pickMove(ml);
     Position posCopy = pos;
     posCopy.makeMove(mv);
 
