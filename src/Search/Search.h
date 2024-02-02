@@ -78,7 +78,6 @@ struct ThreadData { // All information a thread need
   [[nodiscard]] inline Time timeSpent() {
     return getTimeMs() - this->info.starttime;
   }
-
 };
 
 class Search { // Search interface

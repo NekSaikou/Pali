@@ -144,6 +144,15 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
 }
 
 EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
+  // Perform a checkup every 1024 nodes
+  if ((td.info.nodes & 1023) == 0) {
+    if (td.timeSpent() >= td.info.timelim 
+    ||  td.info.nodes >= td.info.nodeslim) {
+      td.abort();
+      return 0;
+    }
+  }
+
   td.info.seldepth = std::max(td.info.seldepth, td.ss.ply);
 
   EvalScore eval = pos.evaluate();
@@ -156,6 +165,8 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
   MoveList ml = MoveList();
   pos.genLegal<true>(ml);
 
+  td.ss.ply++;
+
   // Move loop starts
   for (int i = 0; i < ml.getLength(); i++) {
     Move mv = ml.getMove(i);
@@ -164,15 +175,18 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
 
     td.info.nodes += 1;
 
-    EvalScore score = qsearch(posCopy, -beta, -alpha);
+    EvalScore score = -qsearch(posCopy, -beta, -alpha);
 
     if (score <= eval) continue;
-    else eval = score;
 
-    if (eval >= beta) return eval;
+    eval = score;
+
+    if (eval >= beta) break;
 
     alpha = std::max(alpha, eval);
   }
+
+  td.ss.ply--;
 
   return eval;
 }

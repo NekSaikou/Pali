@@ -1,4 +1,5 @@
 #include "Position.h"
+#include <cassert>
 
 template void Position::genLegal<false>(MoveList& ml);
 template void Position::genLegal<true>(MoveList& ml);
@@ -349,8 +350,8 @@ void Position::genLegal(MoveList &ml) {
             ml.push(Move(from, dp, DoublePush, Pawn));
 
           continue; // Skip the rest of the generation
-        }
-      }
+        } 
+      } else continue; // Skip anyway without pushing anything
 
       bool onPromoRank = getBit(SEVENTH_RANK[this->sideToMove()], from);
 
