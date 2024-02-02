@@ -82,8 +82,8 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
     if (pos.inCheck()) depth++;
 
     // Leaf node or max ply exceeded
-    // if (depth == 0 || td.ss.ply >= MAX_PLY - 1) return qsearch(pos, alpha, beta);
-    if (depth == 0 || td.ss.ply >= MAX_PLY - 1) return pos.evaluate();
+    if (depth == 0 || td.ss.ply >= MAX_PLY - 1) return qsearch(pos, alpha, beta);
+    // if (depth == 0 || td.ss.ply >= MAX_PLY - 1) return pos.evaluate();
 
     // Update stack and ply
     td.ss.push(pos.getHash());

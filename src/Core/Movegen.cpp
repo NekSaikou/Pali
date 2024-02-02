@@ -425,9 +425,7 @@ void Position::genLegal(MoveList &ml) {
 
       if (getBit(checkMask, sp)) {
         if (onPromoRank) {
-          // We only count queen promotion as noisy
           ml.push(Move(from, sp, QueenPromo, Pawn));
-          if constexpr (NoisyOnly) continue; // Skip the rest
           ml.push(Move(from, sp, KnightPromo, Pawn));
           ml.push(Move(from, sp, BishopPromo, Pawn));
           ml.push(Move(from, sp, RookPromo, Pawn));
@@ -436,10 +434,10 @@ void Position::genLegal(MoveList &ml) {
         }
       }
 
-      if constexpr (NoisyOnly) continue; // Double push isn't noisy
-
-      if (dp != NO_SQ && getBit(checkMask, dp)) 
-        ml.push(Move(from, dp, DoublePush, Pawn));
+      // Double push isn't noisy
+      if constexpr (!NoisyOnly)
+        if (dp != NO_SQ && getBit(checkMask, dp)) 
+          ml.push(Move(from, dp, DoublePush, Pawn));
     }
   }
 }
