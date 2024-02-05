@@ -6,7 +6,10 @@ void scoreMoves(Position &pos, MoveList &ml) {
     MoveScore score = 0;
 
     if (mv.isCapture()) {
-      Piece target = pos.pieceOnSQ(mv.getTo());
+      Piece target = mv.isEP()
+        ? Pawn // En passant always capture pawn
+        : pos.pieceOnSQ(mv.getTo());
+
       // Most valuable victim, least valuable attacker
       score += MVV_LVA[target][mv.getPiece()];
     } else {

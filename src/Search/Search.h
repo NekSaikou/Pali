@@ -5,6 +5,7 @@
 
 #include "../Core/Position.h"
 #include "Movepick.h"
+#include "HashTable.h"
 #include "../Util.h"
 
 using EvalScore = int16_t;
@@ -83,11 +84,13 @@ struct ThreadData { // All information a thread need
 
 class Search { // Search interface
 public:
-  Search(ThreadData td) {
+  Search(ThreadData td, HashTable *hashTable) {
     this->td = td;
+    this->hashTable = hashTable;
   }
 
   ThreadData td = ThreadData(nullptr, nullptr);
+  HashTable *hashTable = nullptr;
 
   // All searches start here
   template<bool MAIN_THREAD>

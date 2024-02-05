@@ -51,7 +51,9 @@ void Search::go() {
 }
 
 EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore beta) {
-  bool isPVNode = beta - alpha > 1;
+  bool isPVNode = beta - alpha > 1; // PV nodes have full window
+  Bound bound = BoundNone; // Cutoff bound to be stored in TT
+  uint16_t bestMove = 0; // Best move to be stored in TT
   // Instructed to stop searching
   if (td.mustStop()) return 0;
 
@@ -162,12 +164,12 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
 
   alpha = std::max(alpha, eval);
 
+  td.ss.ply++;
+
   // Only generate noisy moves
   MoveList ml = MoveList();
   pos.genLegal<true>(ml);
   scoreMoves(pos, ml);
-
-  td.ss.ply++;
 
   // Move loop starts
   while (ml.getLength()) {

@@ -125,20 +125,20 @@ public:
     return this->length;
   };
 
-  void inline push(Move mv) {
+  inline void push(Move mv) {
     this->moves[this->length] = mv;
     this->length++;
   };
 
-  [[nodiscard]] Move inline takeLast() {
+  [[nodiscard]] inline Move takeLast() {
     return this->moves[--this->length];
   };
 
-  void inline clear() {
+  inline void clear() {
     this->length = 0;
   };
 
-  void inline swap(int ix1, int ix2) {
+  inline void swap(int ix1, int ix2) {
     Move m1 = this->moves[ix1];
     this->moves[ix1] = this->moves[ix2];
     this->moves[ix2] = m1;
@@ -148,7 +148,7 @@ public:
     this->scores[ix2] = s1;
   };
 
-  void inline scoreMove(int ix, MoveScore score) {
+  inline void scoreMove(int ix, MoveScore score) {
     this->scores[ix] = score;
   };
 };

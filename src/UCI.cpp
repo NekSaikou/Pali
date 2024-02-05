@@ -11,7 +11,8 @@ void uciLoop() {
   Position pos = Position(START_POS);
   std::atomic<bool> stop = false;
   ThreadData td = ThreadData(&pos, &stop);
-  Search searcher = Search(td);
+  HashTable hashTable = HashTable();
+  Search searcher = Search(td, &hashTable);
 
   // UCI options
   Options options;

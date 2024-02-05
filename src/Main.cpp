@@ -1,12 +1,3 @@
-#include <cassert>
-#include <iostream>
-#include "Core/BasicTypes.h"
-#include "Core/Moves.h"
-#include "Core/Position.h"
-#include "Core/Zobrist.h"
-#include "Search/NNUE/Network.h"
-#include "Perft.h"
-#include "Search/Search.h"
 #include "UCI.h"
 
 constexpr bool DEBUG = false;
@@ -19,7 +10,7 @@ int main (int argc, char *argv[]) {
   initNNUE();
 
   if constexpr (DEBUG) {
-
+    std::cout << sizeof(HashEntry) << std::endl;
   } else {
     std::cout << "Fodder "
               << "by Nek"

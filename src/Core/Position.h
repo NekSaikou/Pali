@@ -57,7 +57,7 @@ public:
 
   void makeMove(Move mv);
 
-  void inline updateHash(HashKey key) {
+  inline void updateHash(HashKey key) {
     this->hash ^= key;
   }
 
@@ -66,7 +66,8 @@ public:
 
   [[nodiscard]] inline Piece pieceOnSQ(Square sq) {
     for (int pc = Pawn; pc <= King; pc++) {
-      if (getBit(this->pieces[pc], sq)) return static_cast<Piece>(pc);
+      if (getBit(this->pieces[pc], sq)) 
+        return static_cast<Piece>(pc);
     }
     return NO_PC;
   }
@@ -109,7 +110,7 @@ public:
     return this->hmc;
   }
 
-  [[nodiscard]] bool inline inCheck() {
+  [[nodiscard]] inline bool inCheck() {
     return this->getColorBB(this->oppSideToMove()) 
          & sqAttackers(
             lsb(this->getColoredPieceBB(this->sideToMove(), King)), 
