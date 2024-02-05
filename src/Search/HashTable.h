@@ -49,10 +49,10 @@ public:
     uint8_t depth
   ) {
     HashEntry *prevEntry = &this->data[index(hashKey)];
-    // Make sure the new data isn't worse
+    // Make sure the new entry isn't worse
     if (bound != BoundExact // Not exact PV
-    && depth + 3 + bound < prevEntry->depth // From much lower depth
     && hashKey == prevEntry->hashKey // From same position
+    && depth + 3 + 2 * bound < prevEntry->depth // From much lower depth
     ) return; // Don't do anything if every condition is met
 
     uint64_t ttIx = this->index(hashKey);
