@@ -20,12 +20,12 @@ add_compile_options(
   -flto -funroll-loops -fno-exceptions
   -march=native
   -Wall -pedantic
-  -fsanitize=undefined -fsanitize=address
+  # -fsanitize=undefined -fsanitize=address
   )
 
 add_link_options(
   -flto
-  -fsanitize=undefined -fsanitize=address
+  # -fsanitize=undefined -fsanitize=address
   )
 
 add_executable(Fodder ${SRC_FILES})

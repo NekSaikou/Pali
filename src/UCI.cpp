@@ -17,6 +17,8 @@ void uciLoop() {
   // UCI options
   Options options;
 
+  searcher.hashTable->init(options.hash);
+
   // Main loop
   while (true) {
     std::getline(std::cin, input);
@@ -116,7 +118,7 @@ void command_setoption(Options &options) {
 }
 
 void command_go(Search &searcher, Options &options) {
-  int mtg = 40;
+  int mtg = 30;
   int depth = 40;
   uint64_t nodes = UINT64_MAX;
   Time wtime = UINT64_MAX;
@@ -139,7 +141,7 @@ void command_go(Search &searcher, Options &options) {
   Time time = searcher.td.rootPos->sideToMove() == White ? wtime : btime;
   Time inc = searcher.td.rootPos->sideToMove() == White ? winc : binc;
 
-  Time allocatedTime = time/mtg + 2*inc + 5;
+  Time allocatedTime = time/mtg + inc + 15;
 
   searcher.td.info.depth = depth;
   searcher.td.info.nodeslim = nodes;

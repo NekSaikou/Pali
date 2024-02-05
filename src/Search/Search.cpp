@@ -52,8 +52,11 @@ void Search::go() {
 
 EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore beta) {
   bool isPVNode = beta - alpha > 1; // PV nodes have full window
-  Bound bound = BoundNone; // Cutoff bound to be stored in TT
+  Bound bound = BoundAlpha; // Cutoff bound to be stored in TT
   uint16_t bestMove = 0; // Best move to be stored in TT
+
+  EvalScore eval = NO_SCORE; // Static eval of the position
+  EvalScore score = NO_SCORE; // Search score of the position
   // Instructed to stop searching
   if (td.mustStop()) return 0;
 
@@ -66,34 +69,55 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
     }
   }
 
-  { // Start of node stuffs
-    // Extend PV length
-    td.pvTable.length[td.ss.ply] = td.ss.ply;
+  // Start of node stuffs
+  td.info.nodes++; // Increment nodes count
+  
+  // TT probing
+  std::optional<HashEntry> tte = hashTable->probeHashEntry(pos.getHash());
+  if (tte != std::nullopt) {
+    score = tte->score;
+    eval = tte->eval;
+    bestMove = tte->bestMove;
 
-    // Check if we have to return
-    if (isDraw(pos)) return 0; // Draw
-
-    td.info.nodes++; // Increment nodes count
-
-    // Mate distance pruning
-    alpha = std::max(alpha, static_cast<int16_t>(-CHECKMATE + td.ss.ply));
-    beta = std::min(beta, static_cast<int16_t>(CHECKMATE - td.ss.ply));
-    if (alpha >= beta) return alpha;
-
-    // Check extension
-    if (pos.inCheck()) depth++;
-
-    // Leaf node or max ply exceeded
-    if (depth == 0 || td.ss.ply >= MAX_PLY - 1) return qsearch(pos, alpha, beta);
-
-    // Update stack and ply
-    td.ss.push(pos.getHash());
+    // TT cutoff
+    if (!isPVNode // Not PV node
+    && depth <= tte->depth // Depth lower than TT entry
+    ) {
+      switch (tte->bound) {
+        case BoundNone: break;
+        case BoundAlpha: if (score <= alpha) return score; break;
+        case BoundBeta: if (score >= beta) return score; break;
+        case BoundExact: return score; break;
+      }
+    }
+  } else {
+    eval = pos.evaluate();
   }
+  // Extend PV length
+  td.pvTable.length[td.ss.ply] = td.ss.ply;
+
+  // Check if we have to return
+  if (isDraw(pos)) return 0; // Draw
+
+  // Mate distance pruning
+  alpha = std::max(alpha, static_cast<int16_t>(-CHECKMATE + td.ss.ply));
+  beta = std::min(beta, static_cast<int16_t>(CHECKMATE - td.ss.ply));
+  if (alpha >= beta) return alpha;
+
+  // Check extension
+  if (pos.inCheck()) depth++;
+
+  // Leaf node or max ply exceeded
+  if (depth == 0 || td.ss.ply >= MAX_PLY - 1) return qsearch(pos, alpha, beta);
+
+  // Update stack and ply
+  td.ss.push(pos.getHash());
+  
 
   // Generate moves
   MoveList ml = MoveList();
   pos.genLegal<false>(ml);
-  scoreMoves(pos, ml);
+  scoreMoves(pos, ml, bestMove);
 
   // Move loop starts
   int movesSearched = 0;
@@ -105,7 +129,6 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
     movesSearched++;
 
     // PVS
-    EvalScore score = NO_SCORE;
     if (movesSearched == 1) {
       score = -negamax(posCopy, depth - 1, -beta, -alpha) ;
     } else {
@@ -120,11 +143,17 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
     // Node fails high
     if (score >= beta) {
       alpha = beta;
+      // Update TT entry
+      bound = BoundBeta;
+      bestMove = mv.compress();
       break;
     }
 
     if (score > alpha) {
       alpha = score;
+      // Update TT entry
+      bound = BoundExact;
+      bestMove = mv.compress();
 
       // Alpha raised, update PV
       td.pvTable.moves[td.ss.ply - 1][td.ss.ply - 1] = mv;
@@ -138,6 +167,9 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
 
   // End of node stuffs
   td.ss.pop();
+
+  // Store TT entry
+  hashTable->storeHashEntry(pos.getHash(), bestMove, score, eval, bound, depth);
 
   // Checkmate or stalemate
   if (movesSearched == 0) return pos.inCheck() ? -CHECKMATE + td.ss.ply : 0;
@@ -169,7 +201,7 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
   // Only generate noisy moves
   MoveList ml = MoveList();
   pos.genLegal<true>(ml);
-  scoreMoves(pos, ml);
+  scoreMoves(pos, ml, 0);
 
   // Move loop starts
   while (ml.getLength()) {

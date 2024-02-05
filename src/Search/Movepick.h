@@ -2,7 +2,7 @@
 
 #include "../Core/Position.h"
 
-void scoreMoves(Position &pos, MoveList &ml);
+void scoreMoves(Position &pos, MoveList &ml, uint16_t bestMove);
 Move pickMove(MoveList &ml);
 
 constexpr MoveScore MVV_LVA[6][6] = {
