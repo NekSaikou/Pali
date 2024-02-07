@@ -98,6 +98,12 @@ public:
   }
 
   inline void changeSide() {
+    // En passant expired
+    if (this->epSQ != NO_SQ) {
+      this->updateHash(getEPKey(epSQ));
+      this->epSQ = NO_SQ;
+    }
+
     this->stm = static_cast<Color>(this->stm ^ 1);
     this->updateHash(getSTMKey());
   }

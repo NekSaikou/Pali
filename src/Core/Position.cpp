@@ -92,12 +92,6 @@ void Position::makeMove(Move mv) {
     this->hmc = 0;
   }
 
-  // En passant expired
-  if (this->epSQ != NO_SQ) {
-    this->updateHash(getEPKey(epSQ));
-    this->epSQ = NO_SQ;
-  }
-
   // Move the piece to a the destination and remove it from the old square
   Piece addedPiece = mv.isPromo() ? mv.promoType() : mv.getPiece();
   this->clearPiece(stm, mv.getPiece(), from);

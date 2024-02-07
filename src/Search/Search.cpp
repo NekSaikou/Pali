@@ -110,10 +110,31 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   // Leaf node or max ply exceeded
   if (depth <= 0 || td.sd.ply >= MAX_PLY - 1) return qsearch(pos, alpha, beta);
 
+  if (!isPVNode) {
+    // Null move pruning
+    if (!pos.inCheck()
+    &&  eval >= beta    
+    &&  td.sd.ply > 0   
+    &&  depth >= 3      
+    &&  pos.getColoredPieceBB(pos.sideToMove(), Pawn) // Still have pawns left
+    ) {
+      int R = 3 + depth / 3 + std::min((eval - beta) / 200, 3);
+
+      // Give opponent a free move
+      pos.changeSide();
+
+      EvalScore nmpScore = -negamax(pos, depth - R, -beta, -beta + 1);
+
+      // Revert the side to move
+      pos.changeSide();
+
+      if (nmpScore >= beta) return beta;
+    }
+  }
+
   // Update stack and ply
   td.sd.push(pos.getHash());
   
-
   // Generate moves
   MoveList ml = MoveList();
   pos.genLegal<false>(ml);
