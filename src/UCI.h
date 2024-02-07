@@ -18,7 +18,7 @@ void command_uci();
 
 void command_isready();
 
-void command_ucinewgame(Search &searcher);
+void command_ucinewgame(Search &searcher, Options &options);
 
 void command_position(Search &searcher);
 
