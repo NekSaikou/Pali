@@ -29,7 +29,7 @@ void uciLoop() {
     else if (tokens[0] == "quit") break;
     else if (tokens[0] == "exit") break;
     else if (tokens[0] == "isready") command_isready();
-    else if (tokens[0] == "ucinewgame") command_ucinewgame(searcher, options);
+    else if (tokens[0] == "ucinewgame") command_ucinewgame(searcher);
     else if (tokens[0] == "position") command_position(searcher);
     else if (tokens[0] == "setoption") command_setoption(options);
     else if (tokens[0] == "stop") command_stop(searcher);
@@ -48,9 +48,8 @@ void command_isready() {
   std::cout << "readyok" << std::endl;
 }
 
-void command_ucinewgame(Search &searcher, Options options) {
+void command_ucinewgame(Search &searcher) {
   *searcher.td.rootPos = Position(START_POS);
-  searcher.hashTable->init(options.hash);
 }
 
 void command_position(Search &searcher) {
@@ -110,13 +109,12 @@ void command_position(Search &searcher) {
 
 void command_setoption(Options &options) {
   std::vector<std::string> tokens = splitWS(input);
-  if (tokens[2] == "Hash") {
-    options.hash = std::stoi(tokens.at(4));
-  }
-  else if (tokens[2] == "Threads") {
-      options.threads = std::stoi(tokens.at(4));
-      std::cout << "Set Threads to " << options.threads << "\n";
-  }
+    if (tokens[2] == "Hash") {
+    }
+    else if (tokens[2] == "Threads") {
+        options.threads = std::stoi(tokens.at(4));
+        std::cout << "Set Threads to " << options.threads << "\n";
+    }
 }
 
 void command_go(Search &searcher, Options &options) {

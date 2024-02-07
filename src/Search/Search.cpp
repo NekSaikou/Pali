@@ -46,7 +46,7 @@ void Search::go() {
     std::cout << "bestmove " << bestMove.string() << std::endl;
 
   // Reset the search stack to prepare for next search
-  td.ss.reset();
+  td.sd.reset();
   td.abort();
 }
 
@@ -94,24 +94,24 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
     eval = pos.evaluate();
   }
   // Extend PV length
-  td.pvTable.length[td.ss.ply] = td.ss.ply;
+  td.pvTable.length[td.sd.ply] = td.sd.ply;
 
   // Check if we have to return
   if (isDraw(pos)) return 0; // Draw
 
   // Mate distance pruning
-  alpha = std::max(alpha, static_cast<int16_t>(-CHECKMATE + td.ss.ply));
-  beta = std::min(beta, static_cast<int16_t>(CHECKMATE - td.ss.ply));
+  alpha = std::max(alpha, static_cast<int16_t>(-CHECKMATE + td.sd.ply));
+  beta = std::min(beta, static_cast<int16_t>(CHECKMATE - td.sd.ply));
   if (alpha >= beta) return alpha;
 
   // Check extension
   if (pos.inCheck()) depth++;
 
   // Leaf node or max ply exceeded
-  if (depth == 0 || td.ss.ply >= MAX_PLY - 1) return qsearch(pos, alpha, beta);
+  if (depth <= 0 || td.sd.ply >= MAX_PLY - 1) return qsearch(pos, alpha, beta);
 
   // Update stack and ply
-  td.ss.push(pos.getHash());
+  td.sd.push(pos.getHash());
   
 
   // Generate moves
@@ -156,23 +156,23 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
       bestMove = mv.compress();
 
       // Alpha raised, update PV
-      td.pvTable.moves[td.ss.ply - 1][td.ss.ply - 1] = mv;
-      for (int i = td.ss.ply; i < td.pvTable.length[td.ss.ply]; i++) {
-          td.pvTable.moves[td.ss.ply - 1][i] = td.pvTable.moves[td.ss.ply][i];
+      td.pvTable.moves[td.sd.ply - 1][td.sd.ply - 1] = mv;
+      for (int i = td.sd.ply; i < td.pvTable.length[td.sd.ply]; i++) {
+          td.pvTable.moves[td.sd.ply - 1][i] = td.pvTable.moves[td.sd.ply][i];
       }
       // Extend the lower PV line
-      td.pvTable.length[td.ss.ply - 1] = td.pvTable.length[td.ss.ply];
+      td.pvTable.length[td.sd.ply - 1] = td.pvTable.length[td.sd.ply];
     }
   }
 
   // End of node stuffs
-  td.ss.pop();
+  td.sd.pop();
 
   // Store TT entry
   hashTable->storeHashEntry(pos.getHash(), bestMove, score, eval, bound, depth);
 
   // Checkmate or stalemate
-  if (movesSearched == 0) return pos.inCheck() ? -CHECKMATE + td.ss.ply : 0;
+  if (movesSearched == 0) return pos.inCheck() ? -CHECKMATE + td.sd.ply : 0;
 
   return alpha;
 }
@@ -188,7 +188,7 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
   }
 
   // Start of node stuffs
-  td.info.seldepth = std::max(td.info.seldepth, td.ss.ply);
+  td.info.seldepth = std::max(td.info.seldepth, td.sd.ply);
 
   EvalScore eval = pos.evaluate();
 
@@ -196,7 +196,7 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
 
   alpha = std::max(alpha, eval);
 
-  td.ss.ply++;
+  td.sd.ply++;
 
   // Only generate noisy moves
   MoveList ml = MoveList();
@@ -223,7 +223,7 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
   }
 
   // End of node stuffs
-  td.ss.ply--;
+  td.sd.ply--;
 
   return eval;
 }

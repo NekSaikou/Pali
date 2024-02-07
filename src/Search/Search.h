@@ -19,7 +19,7 @@ struct PVTable {
   int length[MAX_PLY]= {};
 };
 
-struct SearchStack { // Reset after each search
+struct SearchData { // Reset after each search
   int ply = 0; 
 
   inline void push(HashKey hash) {
@@ -50,7 +50,7 @@ struct SearchInfo { // UCI control
 
 struct ThreadData { // All information a thread need
   Position *rootPos;
-  SearchStack ss = SearchStack();
+  SearchData sd = SearchData();
   SearchInfo info = SearchInfo();
 
   PVTable pvTable = PVTable();
@@ -103,7 +103,7 @@ private:
   [[nodiscard]] EvalScore qsearch(Position &pos, EvalScore alpha, EvalScore beta);
   
   [[nodiscard]] inline bool isDraw(Position &pos) {
-    if (td.ss.ply == 0) return false; // Can't draw on first move
+    if (td.sd.ply == 0) return false; // Can't draw on first move
 
     if (pos.halfMove() >= 100) return true; // Draw by 50 moves rule
 
