@@ -10,7 +10,7 @@ int main (int argc, char *argv[]) {
   initNNUE();
 
   if constexpr (DEBUG) {
-    std::cout << sizeof(HashEntry) << std::endl;
+    // Position pos = Position(START_POS);
   } else {
     std::cout << "Fodder "
               << "by Nek"

@@ -131,6 +131,11 @@ void command_go(Search &searcher, Options &options) {
 
   std::vector<std::string> tokens = splitWS(input);
 
+  if (tokens.size() == 3 && tokens[1] == "perft") {
+    perft(*searcher.td.rootPos, std::stoi(tokens[2]));
+    return;
+  }
+
   for (int i = 0; i < tokens.size(); i++) {
     if (tokens[i] == "movestogo") mtg = std::stoi(tokens[i + 1]);
     else if (tokens[i] == "wtime") wtime = std::stoi(tokens[i + 1]);

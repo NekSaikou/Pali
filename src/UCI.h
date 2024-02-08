@@ -2,6 +2,7 @@
 
 #include <thread>
 
+#include "Perft.h"
 #include "Core/Position.h"
 #include "Search/Search.h"
 #include "Util.h"
