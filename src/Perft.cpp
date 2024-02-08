@@ -48,6 +48,6 @@ void perft(Position &pos, int depth) {
             << "\nnodes: "
             << nodesTotal 
             << "\nnps: "
-            << (uint64_t) ((double) nodesTotal / ((double) getTimeMs() - (double) startTime) * 1000.0 + 0.0001)
+            << nodesTotal / (getTimeMs() - startTime + 1) * 1000
             << std::endl;
 }
