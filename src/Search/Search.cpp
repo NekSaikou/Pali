@@ -45,8 +45,8 @@ void Search::go() {
   if constexpr (MAIN_THREAD) 
     std::cout << "bestmove " << bestMove.string() << std::endl;
 
-  // Reset the search stack to prepare for next search
-  td.sd.reset();
+  // Soft reset heuristics to prepare for next search
+  td.sd.clearHeuristics<false>();
   td.abort();
 }
 
@@ -138,7 +138,7 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   // Generate moves
   MoveList ml = MoveList();
   pos.genLegal<false>(ml);
-  scoreMoves(pos, ml, bestMove);
+  scoreMoves(pos, td.sd, ml, bestMove);
 
   // Move loop starts
   int movesSearched = 0;
@@ -167,6 +167,11 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
       // Update TT entry
       bound = BoundBeta;
       bestMove = mv.compress();
+
+      // Store history heuristic
+      if (mv.isQuiet())
+        td.sd.hh[pos.sideToMove()][mv.getFrom()][mv.getTo()] += depth * depth;
+
       break;
     }
 
@@ -177,12 +182,14 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
       bestMove = mv.compress();
 
       // Alpha raised, update PV
-      td.pvTable.moves[td.sd.ply - 1][td.sd.ply - 1] = mv;
-      for (int i = td.sd.ply; i < td.pvTable.length[td.sd.ply]; i++) {
-          td.pvTable.moves[td.sd.ply - 1][i] = td.pvTable.moves[td.sd.ply][i];
+      if (isPVNode) {
+        td.pvTable.moves[td.sd.ply - 1][td.sd.ply - 1] = mv;
+        for (int i = td.sd.ply; i < td.pvTable.length[td.sd.ply]; i++) {
+            td.pvTable.moves[td.sd.ply - 1][i] = td.pvTable.moves[td.sd.ply][i];
+        }
+        // Extend the lower PV line
+        td.pvTable.length[td.sd.ply - 1] = td.pvTable.length[td.sd.ply];
       }
-      // Extend the lower PV line
-      td.pvTable.length[td.sd.ply - 1] = td.pvTable.length[td.sd.ply];
     }
   }
 
@@ -222,7 +229,7 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
   // Only generate noisy moves
   MoveList ml = MoveList();
   pos.genLegal<true>(ml);
-  scoreMoves(pos, ml, 0);
+  scoreMoves(pos, td.sd, ml, 0);
 
   // Move loop starts
   while (ml.getLength()) {

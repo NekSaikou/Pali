@@ -51,6 +51,7 @@ void command_isready() {
 void command_ucinewgame(Search &searcher, Options &options) {
   *searcher.td.rootPos = Position(START_POS);
   searcher.hashTable->init(options.hash);
+  searcher.td.sd.reset();
 }
 
 void command_position(Search &searcher) {

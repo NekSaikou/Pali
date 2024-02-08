@@ -1,6 +1,9 @@
-#include "Movepick.h"
+#include "Search.h"
 
-void scoreMoves(Position &pos, MoveList &ml, uint16_t bestMove) {
+constexpr MoveScore NOISY_SCORE = 10'000'000;
+constexpr MoveScore HISTORY_CAP = NOISY_SCORE - 1;
+
+void scoreMoves(Position &pos, SearchData &sd, MoveList &ml, uint16_t bestMove) {
   for (int i = 0; i < ml.getLength(); i++) {
     Move mv = ml.getMove(i);
     MoveScore score = 0;
@@ -9,15 +12,20 @@ void scoreMoves(Position &pos, MoveList &ml, uint16_t bestMove) {
     if (mv.compress() == bestMove) {
       score = INT32_MAX;
     } else {
-      if (mv.isCapture()) {
+      if (!mv.isQuiet()) {
+        score += NOISY_SCORE; // Flat noisy move bonus
+
         Piece target = mv.isEP()
           ? Pawn // En passant always capture pawn
           : pos.pieceOnSQ(mv.getTo());
 
         // Most valuable victim, least valuable attacker
-        score += MVV_LVA[target][mv.getPiece()];
+        if (mv.isCapture()) 
+          score += MVV_LVA[target][mv.getPiece()];
+
       } else {
-        
+        // History heuristic
+        score += std::min(HISTORY_CAP, sd.hh[pos.sideToMove()][mv.getFrom()][mv.getTo()]);
       }
     }
 

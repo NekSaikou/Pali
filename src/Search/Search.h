@@ -4,7 +4,6 @@
 #include <atomic>
 
 #include "../Core/Position.h"
-#include "Movepick.h"
 #include "HashTable.h"
 #include "../Util.h"
 
@@ -22,6 +21,8 @@ struct PVTable {
 struct SearchData { // Reset after each search
   int ply = 0; 
 
+  MoveScore hh[2][64][64] = {}; // History heuristic
+
   inline void push(HashKey hash) {
     this->ply++;
   }
@@ -32,6 +33,12 @@ struct SearchData { // Reset after each search
 
   inline void reset() {
     this->ply = 0;
+    this->clearHeuristics<true>();
+  }
+
+  template<bool HardReset>
+  inline void clearHeuristics() {
+    std::memset(*this->hh, 0, sizeof(MoveScore[2][64][64]));
   }
 };
 
@@ -111,3 +118,16 @@ private:
   }
 };
 
+// Movepicker 
+
+void scoreMoves(Position &pos, SearchData &sd, MoveList &ml, uint16_t bestMove);
+Move pickMove(MoveList &ml);
+
+constexpr MoveScore MVV_LVA[6][6] = {
+  { 100005, 200005, 300005, 400005, 500005, 600005 },
+  { 100004, 200004, 300004, 400004, 500004, 600004 },  
+  { 100003, 200003, 300003, 400003, 500003, 600003 },  
+  { 100002, 200002, 300002, 400002, 500002, 600002 },
+  { 100001, 200001, 300001, 400001, 500001, 600001 },  
+  { 100000, 200000, 300000, 400000, 500000, 600000 }
+};
