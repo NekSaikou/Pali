@@ -41,6 +41,7 @@ struct SearchData { // Reset after each search
   template<bool HardReset>
   inline void clearHeuristics() {
     std::memset(*this->hh, 0, sizeof(MoveScore[2][64][64]));
+    std::memset(*this->killers, 0, sizeof(uint16_t[MAX_PLY][2]));
   }
 };
 
