@@ -168,9 +168,18 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
       bound = BoundBeta;
       bestMove = mv.compress();
 
-      // Store history heuristic
-      if (mv.isQuiet())
+      if (mv.isQuiet()) {
+        // Store history heuristic
         td.sd.hh[pos.sideToMove()][mv.getFrom()][mv.getTo()] += depth * depth;
+
+        // Store killer moves
+        // Make sure the same move doesn't get stored twice
+        if (mv.compress() != td.sd.killers[td.sd.ply][0]) {
+          td.sd.killers[td.sd.ply][1] = td.sd.killers[td.sd.ply][0];
+          td.sd.killers[td.sd.ply][0] = mv.compress();
+        }
+      }
+
 
       break;
     }

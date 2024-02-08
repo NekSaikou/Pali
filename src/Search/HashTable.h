@@ -11,12 +11,12 @@ using EvalScore = int16_t;
 enum Bound : uint8_t { BoundNone, BoundAlpha, BoundBeta, BoundExact };
 
 struct HashEntry {
-  HashKey hashKey = 0;    // The position's hash
-  uint16_t bestMove = 0;  // 16-bit version of best move from search
-  EvalScore score = 32001;    // Search score
-  EvalScore eval = 32001;     // Static eval
-  Bound bound = BoundNone;        // The place where cutoff happens
-  uint8_t depth = 0;      // The depth of the search when entry is stored
+  HashKey hashKey = 0;      // The position's hash
+  uint16_t bestMove = 0;    // 16-bit version of best move from search
+  EvalScore score = 32001;  // Search score
+  EvalScore eval = 32001;   // Static eval
+  Bound bound = BoundNone;  // The place where cutoff happens
+  uint8_t depth = 0;        // The depth of the search when entry is stored
 
   inline HashEntry() {};
 

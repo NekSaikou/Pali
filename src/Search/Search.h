@@ -23,6 +23,8 @@ struct SearchData { // Reset after each search
 
   MoveScore hh[2][64][64] = {}; // History heuristic
 
+  uint16_t killers[MAX_PLY][2] = {}; // Killer moves
+
   inline void push(HashKey hash) {
     this->ply++;
   }

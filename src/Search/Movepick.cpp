@@ -1,7 +1,10 @@
 #include "Search.h"
 
-constexpr MoveScore NOISY_SCORE = 10'000'000;
-constexpr MoveScore HISTORY_CAP = NOISY_SCORE - 1;
+constexpr MoveScore NOISY_SCORE = 200'000'000;
+constexpr MoveScore QUIET_CAP = NOISY_SCORE - 1;
+
+constexpr MoveScore KILLER_0 = 90'000'000;
+constexpr MoveScore KILLER_1 = 80'000'000;
 
 void scoreMoves(Position &pos, SearchData &sd, MoveList &ml, uint16_t bestMove) {
   for (int i = 0; i < ml.getLength(); i++) {
@@ -25,7 +28,14 @@ void scoreMoves(Position &pos, SearchData &sd, MoveList &ml, uint16_t bestMove) 
 
       } else {
         // History heuristic
-        score += std::min(HISTORY_CAP, sd.hh[pos.sideToMove()][mv.getFrom()][mv.getTo()]);
+        score += sd.hh[pos.sideToMove()][mv.getFrom()][mv.getTo()];
+
+        // Killer heuristic
+        if (mv.compress() == sd.killers[sd.ply][0]) score += KILLER_0;
+        if (mv.compress() == sd.killers[sd.ply][1]) score += KILLER_1;
+
+        // Make sure quiet moves will not be scored above noisy moves
+        score = std::min(QUIET_CAP, score);
       }
     }
 
