@@ -1,5 +1,4 @@
 #include "Position.h"
-#include <cassert>
 
 template void Position::genLegal<false>(MoveList& ml);
 template void Position::genLegal<true>(MoveList& ml);
