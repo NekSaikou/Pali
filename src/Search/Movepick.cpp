@@ -6,6 +6,8 @@ constexpr MoveScore QUIET_CAP = NOISY_SCORE - 1;
 constexpr MoveScore KILLER_0 = 90'000'000;
 constexpr MoveScore KILLER_1 = 80'000'000;
 
+constexpr MoveScore BAD_PROMOTION = -200'000'000;
+
 void scoreMoves(Position &pos, SearchData &sd, MoveList &ml, uint16_t bestMove) {
   for (int i = 0; i < ml.getLength(); i++) {
     Move mv = ml.getMove(i);
@@ -31,13 +33,17 @@ void scoreMoves(Position &pos, SearchData &sd, MoveList &ml, uint16_t bestMove) 
         score += sd.hh[pos.sideToMove()][mv.getFrom()][mv.getTo()];
 
         // Killer heuristic
-        if (mv.compress() == sd.killers[sd.ply][0]) score += KILLER_0;
-        if (mv.compress() == sd.killers[sd.ply][1]) score += KILLER_1;
+        if      (mv.compress() == sd.killers[sd.ply][0]) score += KILLER_0;
+        else if (mv.compress() == sd.killers[sd.ply][1]) score += KILLER_1;
 
         // Make sure quiet moves will not be scored above noisy moves
         score = std::min(QUIET_CAP, score);
       }
     }
+
+    // Order promotions to rook/bishop last
+    if (mv.isPromo() && (mv.promoType() == Rook || mv.promoType() == Bishop))
+      score += BAD_PROMOTION;
 
     ml.scoreMove(i, score);
   }
