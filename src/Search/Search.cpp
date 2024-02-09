@@ -113,9 +113,9 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   if (!isPVNode) {
     // Null move pruning
     if (!pos.inCheck()
-    &&  eval >= beta    
-    &&  td.sd.ply > 0   
-    &&  depth >= 3      
+    &&  eval >= beta
+    &&  td.sd.ply > 0
+    &&  depth >= 3
     &&  pos.getColoredPieceBB(pos.sideToMove(), Pawn) // Still have pawns left
     ) {
       int R = 3 + depth / 3 + std::min((eval - beta) / 200, 3);
@@ -224,10 +224,35 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
     }
   }
 
+  Bound bound = BoundAlpha; // Cutoff bound to be stored in TT
+
   // Start of node stuffs
   td.info.seldepth = std::max(td.info.seldepth, td.sd.ply);
 
-  EvalScore eval = pos.evaluate();
+  uint16_t bestMove = 0;      // For hash move ordering
+  EvalScore eval = NO_SCORE;
+
+  // Probe TT
+  std::optional<HashEntry> tte = hashTable->probeHashEntry(pos.getHash());
+  if (tte != std::nullopt) {
+    eval = tte->eval;
+    bestMove = tte->bestMove;
+
+    // TT cutoff
+    EvalScore score = tte->score;
+    {
+      switch (tte->bound) {
+        case BoundNone: break;
+        case BoundAlpha: if (score <= alpha) return score; break;
+        case BoundBeta: if (score >= beta) return score; break;
+        case BoundExact: return score; break;
+      }
+    }
+  } else {
+    eval = pos.evaluate();
+  }
+
+  EvalScore staticEval = eval;
 
   if (eval >= beta) return eval;
 
@@ -238,7 +263,7 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
   // Only generate noisy moves
   MoveList ml = MoveList();
   pos.genLegal<true>(ml);
-  scoreMoves(pos, td.sd, ml, 0);
+  scoreMoves(pos, td.sd, ml, bestMove);
 
   // Move loop starts
   while (ml.getLength()) {
@@ -254,13 +279,21 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
 
     eval = score;
 
-    if (eval >= beta) break;
+    if (eval >= beta)  {
+      bound = BoundBeta;
+      break;
+    }
+
+    if (eval > alpha) bound = BoundExact;
 
     alpha = std::max(alpha, eval);
   }
 
   // End of node stuffs
   td.sd.ply--;
+
+  // Store TT entry
+  hashTable->storeHashEntry(pos.getHash(), bestMove, eval, staticEval, bound, 0);
 
   return eval;
 }
