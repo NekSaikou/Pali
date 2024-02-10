@@ -15,7 +15,7 @@ struct HashEntry {
   uint16_t bestMove = 0;    // 16-bit version of best move from search
   EvalScore score = 32001;  // Search score
   EvalScore eval = 32001;   // Static eval
-  Bound bound = BoundNone;  // The place where cutoff happens
+  uint8_t other = 0;        // Cutoff bound and age
   uint8_t depth = 0;        // The depth of the search when entry is stored
 
   inline HashEntry() {};
@@ -26,20 +26,34 @@ struct HashEntry {
     EvalScore score,
     EvalScore eval,
     Bound bound,
+    uint8_t age,
     uint8_t depth
   ) {
     this->hashKey = hashKey;
     this->bestMove = bestMove;
     this->score = score;
-    this->bound = bound;
+    this->other = bound | (age << 2);
     this->depth = depth;
+  }
+
+  inline Bound bound() {
+    return static_cast<Bound>(this->other & 0x3);
+  }
+
+  inline uint8_t age() {
+    return (this->other & 0xfc) >> 2;
   }
 };
 
 class HashTable {
   std::vector<HashEntry> data;
+  std::atomic<uint8_t> age = 0;
 
 public:
+  inline void ageUp() {
+    this->age++;
+    if (this->age > 63) this->age = 0;
+  }
   inline void storeHashEntry(
     HashKey hashKey,
     uint16_t bestMove,
@@ -53,6 +67,7 @@ public:
     if (bound != BoundExact // Not exact PV
     && hashKey == prevEntry->hashKey // From same position
     && depth + 3 + 2 * bound < prevEntry->depth // From much lower depth
+    && this->age.load() == prevEntry->age() // From same search
     ) return; // Don't do anything if every condition is met
 
     uint64_t ttIx = this->index(hashKey);
@@ -60,7 +75,7 @@ public:
     this->data[ttIx].bestMove = bestMove;
     this->data[ttIx].score = score;
     this->data[ttIx].eval = eval;
-    this->data[ttIx].bound = bound;
+    this->data[ttIx].other = bound | (this->age.load() << 2);
     this->data[ttIx].depth = depth;
   }
 

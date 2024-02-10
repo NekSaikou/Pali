@@ -45,6 +45,8 @@ void Search::go() {
   if constexpr (MAIN_THREAD) 
     std::cout << "bestmove " << bestMove.string() << std::endl;
 
+  hashTable->ageUp(); // Increment TT age
+
   // Soft reset heuristics to prepare for next search
   td.sd.clearHeuristics<false>();
   td.abort();
@@ -83,7 +85,7 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
     if (!isPVNode // Not PV node
     && depth <= tte->depth // Depth lower than TT entry
     ) {
-      switch (tte->bound) {
+      switch (tte->bound()) {
         case BoundNone: break;
         case BoundAlpha: if (score <= alpha) return score; break;
         case BoundBeta: if (score >= beta) return score; break;
@@ -205,11 +207,11 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   // End of node stuffs
   td.sd.pop();
 
-  // Store TT entry
-  hashTable->storeHashEntry(pos.getHash(), bestMove, score, eval, bound, depth);
-
   // Checkmate or stalemate
   if (movesSearched == 0) return pos.inCheck() ? -CHECKMATE + td.sd.ply : 0;
+
+  // Store TT entry
+  hashTable->storeHashEntry(pos.getHash(), bestMove, score, eval, bound, depth);
 
   return alpha;
 }
@@ -241,7 +243,7 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
     // TT cutoff
     EvalScore score = tte->score;
     {
-      switch (tte->bound) {
+      switch (tte->bound()) {
         case BoundNone: break;
         case BoundAlpha: if (score <= alpha) return score; break;
         case BoundBeta: if (score >= beta) return score; break;
