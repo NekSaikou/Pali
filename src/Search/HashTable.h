@@ -66,7 +66,7 @@ public:
     // Make sure the new entry isn't worse
     if (bound != BoundExact // Not exact PV
     && hashKey == prevEntry->hashKey // From same position
-    && depth + 3 + 2 * bound < prevEntry->depth // From much lower depth
+    && depth + 5 <= prevEntry->depth // From much lower depth
     && this->age.load() == prevEntry->age() // From same search
     ) return; // Don't do anything if every condition is met
 

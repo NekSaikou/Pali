@@ -5,17 +5,16 @@ template void Search::go<true>();
 
 template<bool MAIN_THREAD>
 void Search::go() {
-  EvalScore bestScore = NO_SCORE;
+  EvalScore bestScore = 0;
   Move bestMove = Move();
 
   td.reset(); // Start timer and clear UCI info
 
-  EvalScore alpha = -INFINITY;
-  EvalScore beta = INFINITY;
   // Iterative deepening
   for (int d = 1; d <= td.info.depth; d++) {
-    // Call negamax
-    bestScore = negamax(*td.rootPos, d, alpha, beta);
+    bestScore = d >= 6
+      ? aspirationSearch(d, bestScore)
+      : negamax(*td.rootPos, d, -INFINITY, INFINITY);
 
     // Stop the search if time ran out
     if (td.mustStop()) break;
@@ -51,6 +50,32 @@ void Search::go() {
   // Soft reset heuristics to prepare for next search
   td.sd.clearHeuristics<false>();
   td.abort();
+}
+
+EvalScore Search::aspirationSearch(int depth, EvalScore score) {
+  EvalScore delta = 15; // Extra starting window
+  EvalScore alpha = std::max(static_cast<EvalScore>(score - delta), static_cast<EvalScore>(-INFINITY));
+  EvalScore beta =  std::min(static_cast<EvalScore>(score + delta), static_cast<EvalScore>(INFINITY));
+
+  int d = depth; // Depth used for search
+
+  while (true) {
+    score = negamax(*td.rootPos, d, alpha, beta);
+
+    // Stop the search if time ran out
+    if (td.mustStop()) return 0;
+
+    if (score <= alpha) {
+      beta = (alpha + beta) / 2;
+      alpha = std::max(static_cast<EvalScore>(alpha - delta), static_cast<EvalScore>(-INFINITY));
+      d = depth;
+    } else if (score >= beta) {
+      beta =  std::min(static_cast<EvalScore>(beta + delta), static_cast<EvalScore>(INFINITY));
+      depth--;
+    } else return score;
+
+    delta *= 2;
+  }
 }
 
 EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore beta) {

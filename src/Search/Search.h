@@ -107,6 +107,8 @@ public:
   void go();
 
 private:
+  [[nodiscard]] EvalScore aspirationSearch(int depth, EvalScore score);
+
   // Main evaluation function
   [[nodiscard]] EvalScore negamax(Position &pos, int depth, EvalScore alpha, EvalScore beta);
 
