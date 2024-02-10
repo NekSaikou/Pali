@@ -10,3 +10,4 @@
 + History Heuristic         (~65 elo)
 + Killer Move Heuristic     (~15 elo)
 + QS hash move ordering + TT cutoff (~9 elo)
++ TT aging                  (~2 elo)

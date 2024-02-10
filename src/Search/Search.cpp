@@ -41,11 +41,12 @@ void Search::go() {
     }
   } // End of iterative deepening loop
 
-  // Print out the best move found
-  if constexpr (MAIN_THREAD) 
+  if constexpr (MAIN_THREAD) {
+    // Print out the best move found
     std::cout << "bestmove " << bestMove.string() << std::endl;
 
-  hashTable->ageUp(); // Increment TT age
+    hashTable->ageUp(); // Increment TT age
+  }
 
   // Soft reset heuristics to prepare for next search
   td.sd.clearHeuristics<false>();

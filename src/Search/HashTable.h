@@ -108,6 +108,7 @@ public:
     const uint64_t hashSize = 0x100000 * size;
     const uint64_t numEntries = (hashSize / sizeof(HashEntry)) - 2;
     this->data.resize(numEntries);
+    this->age.store(0, std::memory_order_relaxed);
     this->clear();
   }
 };
