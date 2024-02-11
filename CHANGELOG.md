@@ -11,3 +11,4 @@
 + Killer Move Heuristic     (~15 elo)
 + QS hash move ordering + TT cutoff (~9 elo)
 + TT aging                  (~2 elo)
++ Aspiration Window         (~38 elo)
