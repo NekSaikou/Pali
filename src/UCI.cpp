@@ -125,6 +125,7 @@ void command_go(Search &searcher, Options &options) {
   int mtg = 30;
   int depth = 40;
   uint64_t nodes = UINT64_MAX;
+  Time movetime = UINT64_MAX;
   Time wtime = UINT64_MAX;
   Time btime = UINT64_MAX;
   Time winc = 0;
@@ -139,6 +140,7 @@ void command_go(Search &searcher, Options &options) {
 
   for (int i = 0; i < tokens.size(); i++) {
     if (tokens[i] == "movestogo") mtg = std::stoi(tokens[i + 1]);
+    else if (tokens[i] == "movetime") movetime = std::stoi(tokens[i + 1]);
     else if (tokens[i] == "wtime") wtime = std::stoi(tokens[i + 1]);
     else if (tokens[i] == "btime") btime = std::stoi(tokens[i + 1]);
     else if (tokens[i] == "winc") winc = std::stoi(tokens[i + 1]);
@@ -154,7 +156,7 @@ void command_go(Search &searcher, Options &options) {
 
   searcher.td.info.depth = depth;
   searcher.td.info.nodeslim = nodes;
-  searcher.td.info.timelim = allocatedTime;
+  searcher.td.info.timelim = std::min(allocatedTime, movetime);
 
   // Join main thread if there's a previous one running
   if (mainThread.joinable()) 
