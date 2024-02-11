@@ -138,10 +138,9 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   // Leaf node or max ply exceeded
   if (depth <= 0 || td.sd.ply >= MAX_PLY - 1) return qsearch(pos, alpha, beta);
 
-  if (!isPVNode) {
+  if (!isPVNode and !pos.inCheck()) {
     // Null move pruning
-    if (!pos.inCheck()
-    &&  eval >= beta
+    if (eval >= beta
     &&  td.sd.ply > 0
     &&  depth >= 3
     &&  pos.getColoredPieceBB(pos.sideToMove(), Pawn) // Still have pawns left
@@ -167,6 +166,9 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   MoveList ml = MoveList();
   pos.genLegal<false>(ml);
   scoreMoves(pos, td.sd, ml, bestMove);
+
+  // Internal iterative reduction
+  if (depth >= 4 && tte->bound() == BoundNone) depth--;
 
   // Move loop starts
   int movesSearched = 0;
