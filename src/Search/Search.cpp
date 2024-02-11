@@ -138,7 +138,7 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   // Leaf node or max ply exceeded
   if (depth <= 0 || td.sd.ply >= MAX_PLY - 1) return qsearch(pos, alpha, beta);
 
-  if (!isPVNode and !pos.inCheck()) {
+  if (!isPVNode && !pos.inCheck()) {
     // Null move pruning
     if (eval >= beta
     &&  td.sd.ply > 0
@@ -168,7 +168,7 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   scoreMoves(pos, td.sd, ml, bestMove);
 
   // Internal iterative reduction
-  if (depth >= 4 && tte->bound() == BoundNone) depth--;
+  if (depth >= 4 && tte == std::nullopt) depth--;
 
   // Move loop starts
   int movesSearched = 0;
