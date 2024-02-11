@@ -4,7 +4,7 @@
 #define INCBIN_STYLE INCBIN_STYLE_CAMEL
 #include "../../../incbin/incbin.h"
 
-INCBIN(Eval, "../net/bobacat.net");
+INCBIN(Eval, "../net/bee.net");
 
 // This translation unit now has three symbols
 // const unsigned char EvalData[];

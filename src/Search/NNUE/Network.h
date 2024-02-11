@@ -8,7 +8,7 @@
 #include "../../Core/BasicTypes.h"
 
 constexpr int INPUT_SIZE = 768;
-constexpr int HIDDEN_SIZE = 128;
+constexpr int HIDDEN_SIZE = 256;
 
 constexpr int SCALE = 400;
 constexpr int QA = 255;
