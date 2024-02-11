@@ -14,3 +14,4 @@
 + TT aging                          (~2 elo)
 + Aspiration Window                 (~38 elo)
 + Internal Iterative Reduction      (~26 elo)
++ Actual net                        (~293 elo)
