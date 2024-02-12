@@ -21,3 +21,4 @@ Changes are listed here in chronological order.
 + Actual net                        (~293 elo)
 + Late Move Reduction               (~154 elo)
 + Reverse Futility Pruning          (~97 elo)
++ Late Move Pruning                 (~68 elo)
