@@ -203,7 +203,7 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
     if (movesSearched == 1) {
       score = -negamax(posCopy, depth - 1, -beta, -alpha) ;
     } else {
-      EvalScore zwsScore = -negamax(posCopy, depth- 1, -alpha - 1, -alpha);
+      EvalScore zwsScore = -negamax(posCopy, depth - 1 - R, -alpha - 1, -alpha);
 
       // If the move beats alpha, continue searching as PV node
       score = zwsScore > alpha && isPVNode
