@@ -137,3 +137,11 @@ constexpr MoveScore MVV_LVA[6][6] = {
   { 100001, 200001, 300001, 400001, 500001, 600001 },  
   { 100000, 200000, 300000, 400000, 500000, 600000 }
 };
+
+constexpr MoveScore NOISY_SCORE = 200'000'000;
+constexpr MoveScore QUIET_CAP = NOISY_SCORE - 1;
+
+constexpr MoveScore KILLER_0 = 90'000'000;
+constexpr MoveScore KILLER_1 = 80'000'000;
+
+constexpr MoveScore BAD_PROMOTION = -200'000'000;

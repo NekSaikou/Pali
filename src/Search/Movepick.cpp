@@ -1,13 +1,5 @@
 #include "Search.h"
 
-constexpr MoveScore NOISY_SCORE = 200'000'000;
-constexpr MoveScore QUIET_CAP = NOISY_SCORE - 1;
-
-constexpr MoveScore KILLER_0 = 90'000'000;
-constexpr MoveScore KILLER_1 = 80'000'000;
-
-constexpr MoveScore BAD_PROMOTION = -200'000'000;
-
 void scoreMoves(Position &pos, SearchData &sd, MoveList &ml, uint16_t bestMove) {
   for (int i = 0; i < ml.getLength(); i++) {
     Move mv = ml.getMove(i);
