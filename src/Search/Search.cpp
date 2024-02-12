@@ -180,13 +180,24 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
 
   // Move loop starts
   int movesSearched = 0;
+  int quietMovesSearched = 0;
   while (ml.getLength()) {
     Move mv = pickMove(ml);
     MoveScore mvScore = ml.getScore(ml.getLength());
+
+    // Late move pruning
+    if (!isPVNode
+    &&  quietMovesSearched > depth * depth + 2
+    &&  depth <= 8
+    ) {
+      break;
+    }
+
     Position posCopy = pos;
     posCopy.makeMove(mv);
 
     movesSearched++;
+    if (mv.isQuiet()) quietMovesSearched++;
 
     // Late move redution
     int R = 0;
