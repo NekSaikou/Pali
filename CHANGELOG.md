@@ -1,3 +1,7 @@
+# Changelog
+Elo differences tested at 10+0.1 time control with unbalanced book.
+Changes are listed here in chronological order.
+
 # Version 0.0
 + UCI
 + Basic search funcitonalities
@@ -16,4 +20,3 @@
 + Internal Iterative Reduction      (~26 elo)
 + Actual net                        (~293 elo)
 + Late Move Reduction               (~154 elo)
-+ Reverse Futility Pruning          (~97 elo)

@@ -175,8 +175,8 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   // Internal iterative reduction
   if (depth >= 4 && tte == std::nullopt) depth--;
 
-  // Late move reduction base
-  double lmrBase = std::log(static_cast<double>(depth)) / 3.0;
+  // Late move reduction multiplier
+  double lmrMultiplier = std::log(static_cast<double>(depth)) / 3.0;
 
   // Move loop starts
   int movesSearched = 0;
@@ -191,11 +191,11 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
     // Late move redution
     int R = 0;
     if (!pos.inCheck()
-    && depth >= 2
-    && td.sd.ply > 0
-    && mvScore < KILLER_1 // Don't reduce killer moves or better
+    &&  depth >= 2
+    &&  td.sd.ply > 0
+    &&  mvScore < KILLER_1 // Don't reduce killer moves or better
     ) {
-      R = static_cast<int>(lmrBase * std::log(static_cast<double>(movesSearched)) + 0.8);
+      R = static_cast<int>(lmrMultiplier * std::log(static_cast<double>(movesSearched)) + 0.8);
 
       R -= static_cast<int>(isPVNode); // Don't reduce PV nodes as much
       R -= posCopy.inCheck(); // Reduce less if the new move is a check
