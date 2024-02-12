@@ -139,6 +139,11 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   if (depth <= 0 || td.sd.ply >= MAX_PLY - 1) return qsearch(pos, alpha, beta);
 
   if (!isPVNode && !pos.inCheck()) {
+    // Reverse futility pruning
+    if (depth <= 8
+    &&  eval >= beta + 80 * depth
+    ) return eval;
+
     // Null move pruning
     if (eval >= beta
     &&  td.sd.ply > 0
