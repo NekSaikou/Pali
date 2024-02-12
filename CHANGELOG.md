@@ -16,3 +16,4 @@
 + Internal Iterative Reduction      (~26 elo)
 + Actual net                        (~293 elo)
 + Late Move Reduction               (~154 elo)
++ Reverse Futility Pruning          (~97 elo)
