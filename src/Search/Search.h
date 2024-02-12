@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <atomic>
+#include <cmath>
 
 #include "../Core/Position.h"
 #include "HashTable.h"
@@ -10,8 +11,8 @@
 using EvalScore = int16_t;
 
 constexpr EvalScore NO_SCORE = 32001;
-constexpr EvalScore INFINITY = 32000;
-constexpr EvalScore CHECKMATE = 30000;
+constexpr EvalScore INFINITY_SCORE = 32000;
+constexpr EvalScore CHECKMATE_SCORE = 30000;
 
 struct PVTable {
   Move moves[MAX_PLY][MAX_PLY];

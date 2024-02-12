@@ -14,7 +14,7 @@ void Search::go() {
   for (int d = 1; d <= td.info.depth; d++) {
     bestScore = d >= 6
       ? aspirationSearch(d, bestScore)
-      : negamax(*td.rootPos, d, -INFINITY, INFINITY);
+      : negamax(*td.rootPos, d, -INFINITY_SCORE, INFINITY_SCORE);
 
     // Stop the search if time ran out
     if (td.mustStop()) break;
@@ -54,8 +54,8 @@ void Search::go() {
 
 EvalScore Search::aspirationSearch(int depth, EvalScore score) {
   EvalScore delta = 15; // Extra starting window
-  EvalScore alpha = std::max(static_cast<EvalScore>(score - delta), static_cast<EvalScore>(-INFINITY));
-  EvalScore beta =  std::min(static_cast<EvalScore>(score + delta), static_cast<EvalScore>(INFINITY));
+  EvalScore alpha = std::max(static_cast<EvalScore>(score - delta), static_cast<EvalScore>(-INFINITY_SCORE));
+  EvalScore beta =  std::min(static_cast<EvalScore>(score + delta), static_cast<EvalScore>(INFINITY_SCORE));
 
   int d = depth; // Depth used for search
 
@@ -67,10 +67,10 @@ EvalScore Search::aspirationSearch(int depth, EvalScore score) {
 
     if (score <= alpha) {
       beta = (alpha + beta) / 2;
-      alpha = std::max(static_cast<EvalScore>(alpha - delta), static_cast<EvalScore>(-INFINITY));
+      alpha = std::max(static_cast<EvalScore>(alpha - delta), static_cast<EvalScore>(-INFINITY_SCORE));
       d = depth;
     } else if (score >= beta) {
-      beta =  std::min(static_cast<EvalScore>(beta + delta), static_cast<EvalScore>(INFINITY));
+      beta =  std::min(static_cast<EvalScore>(beta + delta), static_cast<EvalScore>(INFINITY_SCORE));
       depth--;
     } else return score;
 
@@ -128,8 +128,8 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   if (isDraw(pos)) return 0; // Draw
 
   // Mate distance pruning
-  alpha = std::max(alpha, static_cast<int16_t>(-CHECKMATE + td.sd.ply));
-  beta = std::min(beta, static_cast<int16_t>(CHECKMATE - td.sd.ply));
+  alpha = std::max(alpha, static_cast<int16_t>(-CHECKMATE_SCORE + td.sd.ply));
+  beta = std::min(beta, static_cast<int16_t>(CHECKMATE_SCORE - td.sd.ply));
   if (alpha >= beta) return alpha;
 
   // Check extension
@@ -236,7 +236,7 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   td.sd.pop();
 
   // Checkmate or stalemate
-  if (movesSearched == 0) return pos.inCheck() ? -CHECKMATE + td.sd.ply : 0;
+  if (movesSearched == 0) return pos.inCheck() ? -CHECKMATE_SCORE + td.sd.ply : 0;
 
   // Store TT entry
   hashTable->storeHashEntry(pos.getHash(), bestMove, score, eval, bound, depth);
