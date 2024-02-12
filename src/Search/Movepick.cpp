@@ -22,7 +22,7 @@ void scoreMoves(Position &pos, SearchData &sd, MoveList &ml, uint16_t bestMove) 
 
       } else {
         // History heuristic
-        score += sd.hh[pos.sideToMove()][mv.getFrom()][mv.getTo()];
+        score += std::min(HISTORY_MAX, sd.hh[pos.sideToMove()][mv.getFrom()][mv.getTo()]);
 
         // Killer heuristic
         if      (mv.compress() == sd.killers[sd.ply][0]) score += KILLER_0;
