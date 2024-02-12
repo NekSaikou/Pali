@@ -73,11 +73,14 @@ void Position::makeMove(Move mv) {
 
   Piece target = pieceOnSQ(mv.getTo());
 
-  this->hmc++; // Increment this first thing
-
   // We will clear pawn captured by en passant
   // and update this->epSQ in case of double push on this square
   Square epSQUpdate = to - (this->sideToMove() ? South : North);
+
+  this->hmc++; // Increment this first thing
+
+  // End the turn and change side
+  this->changeSide();
 
   // We reset half move clock either when a pawn moves
   // or a capture happens
@@ -115,9 +118,6 @@ void Position::makeMove(Move mv) {
 
   // Update castling rights
   this->updateRights(from, to);
-
-  // End the turn and change side
-  this->changeSide();
 }
 
 // Return the position of each piece attacking a square

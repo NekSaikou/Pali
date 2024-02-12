@@ -103,7 +103,7 @@ public:
       this->epSQ = NO_SQ;
     }
 
-    this->stm = static_cast<Color>(this->stm ^ 1);
+    this->stm = this->oppSideToMove();
     this->updateHash(getSTMKey());
   }
 
