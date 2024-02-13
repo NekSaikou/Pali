@@ -7,6 +7,7 @@
 #include "../Core/Position.h"
 #include "HashTable.h"
 #include "../Util.h"
+#include "SEE.h"
 
 using EvalScore = int16_t;
 
