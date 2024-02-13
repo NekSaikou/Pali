@@ -334,6 +334,10 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
   // Move loop starts
   while (ml.getLength()) {
     Move mv = pickMove(ml);
+
+    // SEE pruning
+    if (!staticExchangeEval(pos, mv, 8)) continue;
+
     Position posCopy = pos;
     posCopy.makeMove(mv);
 
