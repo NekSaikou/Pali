@@ -22,3 +22,4 @@ Changes are listed here in chronological order.
 + Late Move Reduction               (~154 elo)
 + Reverse Futility Pruning          (~97 elo)
 + Late Move Pruning                 (~68 elo)
++ SEE ordering                      (~74 elo)
