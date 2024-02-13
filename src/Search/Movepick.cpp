@@ -16,9 +16,14 @@ void scoreMoves(Position &pos, SearchData &sd, MoveList &ml, uint16_t bestMove) 
           ? Pawn // En passant always capture pawn
           : pos.pieceOnSQ(mv.getTo());
 
-        // Most valuable victim, least valuable attacker
-        if (mv.isCapture()) 
+        if (mv.isCapture()) {
+          // Bad captures get ordered last
+          if (!staticExchangeEval(pos, mv, -205))
+            score -= 2 * NOISY_SCORE;
+
+          // Most valuable victim, least valuable attacker
           score += MVV_LVA[target][mv.getPiece()];
+        }
 
       } else {
         // History heuristic
