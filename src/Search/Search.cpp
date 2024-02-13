@@ -179,15 +179,15 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   double lmrMultiplier = std::log(static_cast<double>(depth)) / 3.0;
 
   // Move loop starts
-  int movesSearched = 0;
-  int quietMovesSearched = 0;
+  int movesMade = 0;
+  int quietMovesMade = 0;
   while (ml.getLength()) {
     Move mv = pickMove(ml);
     MoveScore mvScore = ml.getScore(ml.getLength());
 
     // Late move pruning
     if (!isPVNode
-    &&  quietMovesSearched > depth * depth + 2
+    &&  quietMovesMade > depth * depth + 2
     &&  depth <= 8
     ) {
       break;
@@ -196,8 +196,8 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
     Position posCopy = pos;
     posCopy.makeMove(mv);
 
-    movesSearched++;
-    if (mv.isQuiet()) quietMovesSearched++;
+    movesMade++;
+    if (mv.isQuiet()) quietMovesMade++;
 
     // Late move redution
     int R = 0;
@@ -206,7 +206,7 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
     &&  td.sd.ply > 0
     &&  mvScore < KILLER_1 // Don't reduce killer moves or better
     ) {
-      R = static_cast<int>(lmrMultiplier * std::log(static_cast<double>(movesSearched)) + 0.8);
+      R = static_cast<int>(lmrMultiplier * std::log(static_cast<double>(movesMade)) + 0.8);
 
       R -= static_cast<int>(isPVNode); // Don't reduce PV nodes as much
       R -= posCopy.inCheck(); // Reduce less if the new move is a check
@@ -216,7 +216,7 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
     }
 
     // PVS
-    if (movesSearched == 1) {
+    if (movesMade == 1) {
       score = -negamax(posCopy, depth - 1, -beta, -alpha) ;
     } else {
       EvalScore zwsScore = -negamax(posCopy, depth - 1 - R, -alpha - 1, -alpha);
@@ -272,7 +272,7 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   td.sd.pop();
 
   // Checkmate or stalemate
-  if (movesSearched == 0) return pos.inCheck() ? -CHECKMATE_SCORE + td.sd.ply : 0;
+  if (movesMade == 0) return pos.inCheck() ? -CHECKMATE_SCORE + td.sd.ply : 0;
 
   // Store TT entry
   hashTable->storeHashEntry(pos.getHash(), bestMove, score, eval, bound, depth);
