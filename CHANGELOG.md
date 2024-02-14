@@ -24,3 +24,4 @@ Changes are listed here in chronological order.
 + Late Move Pruning                 (~68 elo)
 + SEE ordering                      (~74 elo)
 + QS SEE pruning                    (~107 elo)
++ Don't perform LMP while in check  (~3 elo)

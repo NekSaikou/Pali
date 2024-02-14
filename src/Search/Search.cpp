@@ -190,6 +190,7 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
 
     // Late move pruning
     if (!isPVNode
+    &&  !isInCheck
     &&  quietMovesMade > depth * depth + 2
     &&  depth <= 8
     ) {
