@@ -25,3 +25,4 @@ Changes are listed here in chronological order.
 + SEE ordering                      (~74 elo)
 + QS SEE pruning                    (~107 elo)
 + Don't perform LMP while in check  (~3 elo)
++ PVS SEE pruning                   (~72 elo)
