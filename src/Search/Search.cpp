@@ -79,12 +79,15 @@ EvalScore Search::aspirationSearch(int depth, EvalScore score) {
 }
 
 EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore beta) {
-  bool isPVNode = beta - alpha > 1; // PV nodes have full window
   Bound bound = BoundAlpha; // Cutoff bound to be stored in TT
   uint16_t bestMove = 0; // Best move to be stored in TT
 
   EvalScore eval = NO_SCORE; // Static eval of the position
   EvalScore score = NO_SCORE; // Search score of the position
+
+  bool isInCheck = pos.inCheck(); // True if either king is in check
+  bool isPVNode = beta - alpha > 1; // PV nodes have full window
+
   // Instructed to stop searching
   if (td.mustStop()) return 0;
 
@@ -133,12 +136,12 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   if (alpha >= beta) return alpha;
 
   // Check extension
-  if (pos.inCheck()) depth++;
+  if (isInCheck) depth++;
 
   // Leaf node or max ply exceeded
   if (depth <= 0 || td.sd.ply >= MAX_PLY - 1) return qsearch(pos, alpha, beta);
 
-  if (!isPVNode && !pos.inCheck()) {
+  if (!isPVNode && !isInCheck) {
     // Reverse futility pruning
     if (depth <= 8
     &&  eval >= beta + 80 * depth
@@ -201,7 +204,7 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
 
     // Late move redution
     int R = 0;
-    if (!pos.inCheck()
+    if (!isInCheck
     &&  depth >= 2
     &&  td.sd.ply > 0
     &&  mvScore < KILLER_1 // Don't reduce killer moves or better
@@ -272,7 +275,7 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   td.sd.pop();
 
   // Checkmate or stalemate
-  if (movesMade == 0) return pos.inCheck() ? -CHECKMATE_SCORE + td.sd.ply : 0;
+  if (movesMade == 0) return isInCheck ? -CHECKMATE_SCORE + td.sd.ply : 0;
 
   // Store TT entry
   hashTable->storeHashEntry(pos.getHash(), bestMove, score, eval, bound, depth);
