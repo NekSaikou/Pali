@@ -197,6 +197,14 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
       break;
     }
 
+    // SEE pruning
+    EvalScore threshold = mv.isCapture()
+      ? -25 * depth * depth
+      : -60 * depth;
+    if (depth <= 8 
+    &&  !staticExchangeEval(pos, mv, threshold)
+    ) continue;
+
     Position posCopy = pos;
     posCopy.makeMove(mv);
 
