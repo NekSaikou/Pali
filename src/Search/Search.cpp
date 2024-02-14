@@ -200,6 +200,8 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
     Position posCopy = pos;
     posCopy.makeMove(mv);
 
+    bool causesCheck = posCopy.inCheck(); // True if the move is a check
+
     movesMade++;
     if (mv.isQuiet()) quietMovesMade++;
 
@@ -213,7 +215,7 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
       R = static_cast<int>(lmrMultiplier * std::log(static_cast<double>(movesMade)) + 0.8);
 
       R -= static_cast<int>(isPVNode); // Don't reduce PV nodes as much
-      R -= posCopy.inCheck(); // Reduce less if the new move is a check
+      R -= static_cast<int>(causesCheck); // Reduce less if the new move is a check
       R -= mvScore <= HISTORY_MAX ? mvScore / 16384 : 0; // Reduce less for moves with good history
 
       R = std::max(0, R); // Don't accidentally extend
