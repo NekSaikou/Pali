@@ -6,6 +6,9 @@ static std::string input;
 // Main search thread
 static std::thread mainThread;
 
+// Helper search threads
+static std::vector<std::thread> helperThreads;
+
 void uciLoop() {
   // Initialize searcher object
   Position pos = Position(START_POS);
@@ -162,8 +165,20 @@ void command_go(Search &searcher, Options &options) {
   if (mainThread.joinable()) 
       mainThread.join();
 
+  // Join helper threads then destroy them
+  for (auto &thread : helperThreads)
+    if (thread.joinable())
+        thread.join();
+  helperThreads.clear();
+
   // Spawn main thread
   mainThread = std::thread( [&searcher] { searcher.go<true>(); });
+
+  // Spawn helper threads
+  for (int i = 1; i < options.threads; i++) {
+    Search helperSearcher = searcher; // Create a searcher for each thread
+    helperThreads.emplace_back( [&helperSearcher] { helperSearcher.go<false>(); });
+  }
 }
 
 void command_stop(Search &searcher) {
@@ -171,4 +186,9 @@ void command_stop(Search &searcher) {
 
   if (mainThread.joinable()) 
       mainThread.join();
+
+  for (auto &thread : helperThreads)
+    if (thread.joinable())
+        thread.join();
+  helperThreads.clear();
 }
