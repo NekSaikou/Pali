@@ -65,9 +65,9 @@ public:
     HashEntry *prevEntry = &this->data[index(hashKey)];
     // Make sure the new entry isn't worse
     if (bound != BoundExact // Not exact PV
-    && hashKey == prevEntry->hashKey // From same position
-    && depth + 5 <= prevEntry->depth // From much lower depth
-    && this->age.load() == prevEntry->age() // From same search
+    &&  hashKey == prevEntry->hashKey // From same position
+    &&  depth + 5 <= prevEntry->depth // From much lower depth
+    &&  this->age.load() == prevEntry->age() // From same search
     ) return; // Don't do anything if every condition is met
 
     uint64_t ttIx = this->index(hashKey);

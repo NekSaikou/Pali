@@ -112,7 +112,7 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
 
     // TT cutoff
     if (!isPVNode // Not PV node
-    && depth <= tte->depth // Depth lower than TT entry
+    &&  depth <= tte->depth // Depth lower than TT entry
     ) {
       switch (tte->bound()) {
         case BoundNone: break;
