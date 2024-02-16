@@ -139,6 +139,11 @@ Position::Position(const std::string &fen) {
   // Trim the FEN then break it into tokens
   std::vector<std::string> tokens = splitWS(trim(fen));
 
+  if (tokens.size() < 5) {
+    std::cerr << "Invalid fen: " << fen << std::endl;
+    exit(1);
+  }
+
   // Parse position of pieces
   Rank rank = 0;
   File file = 0;

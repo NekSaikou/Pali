@@ -29,3 +29,4 @@ Changes are listed here in chronological order.
 
 # Version 0.2
 + Multi-threading support
++ Slightly less broken UCI
