@@ -31,3 +31,4 @@ Changes are listed here in chronological order.
 + Multi-threading support
 + Slightly less broken UCI
 + Added README.md
++ Threefold repetition detection
