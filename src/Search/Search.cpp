@@ -8,6 +8,8 @@ void Search::go() {
   EvalScore bestScore = 0;
   Move bestMove = Move();
 
+  td.sd.hashHistory.reserve(MAX_MOVE); // Pre-allocate hash history
+
   td.reset(); // Start timer and clear UCI info
 
   // Iterative deepening

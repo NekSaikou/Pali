@@ -124,8 +124,10 @@ private:
     if (td.sd.ply == 0) return false; // Can't draw on first move
 
     // Draw by threefold repetition
+    int repetition = 0;
     for (int i = td.sd.hashHistory.size(); i > pos.halfMove(); i--)
-      if (td.sd.hashHistory[i] == pos.getHash()) return true; 
+      if (td.sd.hashHistory[i] == pos.getHash()) repetition++; 
+    if (repetition >= 2) return true;
 
     if (pos.halfMove() >= 100) return true; // Draw by 50 moves rule
 
