@@ -108,13 +108,15 @@ void command_position(Search &searcher) {
       MoveList ml = MoveList();
       searcher.td.rootPos->genLegal<false>(ml);
 
+      searcher.td.sd.hashHistory.push_back(searcher.td.rootPos->getHash());
+
       for (int j = 0; j < ml.getLength(); j++) {
         Move mv = ml.getMove(j);
         if (mv.getFrom() == from 
         &&  mv.getTo() == to) {
           if (mv.promoType() == promo || promo == NO_PC) {
-            // TODO: Make a proper 3 fold detection
             searcher.td.rootPos->makeMove(mv);
+            searcher.td.sd.hashHistory.push_back(searcher.td.rootPos->getHash());
           }
         }
       }

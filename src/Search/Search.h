@@ -23,15 +23,19 @@ struct PVTable {
 struct SearchData { // Reset after each search
   int ply = 0; 
 
+  std::vector<HashKey> hashHistory; // For detecting repetition
+
   MoveScore hh[2][64][64] = {}; // History heuristic
 
   uint16_t killers[MAX_PLY][2] = {}; // Killer moves
 
   inline void push(HashKey hash) {
+    this->hashHistory.push_back(hash);
     this->ply++;
   }
 
   inline void pop() {
+    this->hashHistory.pop_back();
     this->ply--;
   }
 
@@ -118,6 +122,10 @@ private:
   
   [[nodiscard]] inline bool isDraw(Position &pos) {
     if (td.sd.ply == 0) return false; // Can't draw on first move
+
+    // Draw by threefold repetition
+    for (int i = td.sd.hashHistory.size(); i > pos.halfMove(); i--)
+      if (td.sd.hashHistory[i] == pos.getHash()) return true; 
 
     if (pos.halfMove() >= 100) return true; // Draw by 50 moves rule
 
