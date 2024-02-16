@@ -46,10 +46,10 @@ void uciLoop() {
 }
 
 void command_uci() {
-  std::cout << "id name Fodder" << std::endl
-            << "id author Nek" << std::endl 
-            << "uciok" << std::endl
-            << "option name Hash type spin default 16 min 1 max 65536" << std::endl
+  std::cout << "id name Fodder\n"
+            << "id author Nek\n"
+            << "uciok\n"
+            << "option name Hash type spin default 16 min 1 max 65536\n"
             << "option name Threads type spin default 1 min 1 max 512" << std::endl;
 }
 

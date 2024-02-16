@@ -2,13 +2,13 @@
 Elo differences tested at 10+0.1 time control with unbalanced book.
 Changes are listed here in chronological order.
 
-# Version 0.0
+## Version 0.0
 + UCI
 + Basic search funcitonalities
 + Queisence search
 + MVVLVA
 
-# Version 0.1
+## Version 0.1
 + PVS hash move ordering + TT cutoff (~120 elo)
 + Null Move Pruning                 (~54 elo)
 + History Heuristic                 (~65 elo)
