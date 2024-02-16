@@ -105,6 +105,23 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   // Start of node stuffs
   td.info.nodes++; // Increment nodes count
   
+  // Extend PV length
+  td.pvTable.length[td.sd.ply] = td.sd.ply;
+
+  // Check if we have to return
+  if (isDraw(pos)) return 0; // Draw
+
+  // Mate distance pruning
+  alpha = std::max(alpha, static_cast<int16_t>(-CHECKMATE_SCORE + td.sd.ply));
+  beta = std::min(beta, static_cast<int16_t>(CHECKMATE_SCORE - td.sd.ply));
+  if (alpha >= beta) return alpha;
+
+  // Check extension
+  if (isInCheck) depth++;
+
+  // Leaf node or max ply exceeded
+  if (depth <= 0 || td.sd.ply >= MAX_PLY - 1) return qsearch(pos, alpha, beta);
+
   // TT probing
   std::optional<HashEntry> tte = hashTable->probeHashEntry(pos.getHash());
   if (tte != std::nullopt) {
@@ -126,22 +143,6 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   } else {
     eval = pos.evaluate();
   }
-  // Extend PV length
-  td.pvTable.length[td.sd.ply] = td.sd.ply;
-
-  // Check if we have to return
-  if (isDraw(pos)) return 0; // Draw
-
-  // Mate distance pruning
-  alpha = std::max(alpha, static_cast<int16_t>(-CHECKMATE_SCORE + td.sd.ply));
-  beta = std::min(beta, static_cast<int16_t>(CHECKMATE_SCORE - td.sd.ply));
-  if (alpha >= beta) return alpha;
-
-  // Check extension
-  if (isInCheck) depth++;
-
-  // Leaf node or max ply exceeded
-  if (depth <= 0 || td.sd.ply >= MAX_PLY - 1) return qsearch(pos, alpha, beta);
 
   if (!isPVNode && !isInCheck) {
     // Reverse futility pruning
