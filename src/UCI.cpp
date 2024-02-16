@@ -8,6 +8,7 @@ static std::thread mainThread;
 
 // Helper search threads
 static std::vector<std::thread> helperThreads;
+static std::vector<Search> helperSearchers;
 
 void uciLoop() {
   // Initialize searcher object
@@ -170,14 +171,17 @@ void command_go(Search &searcher, Options &options) {
     if (thread.joinable())
         thread.join();
   helperThreads.clear();
+  helperSearchers.clear();
 
   // Spawn main thread
   mainThread = std::thread( [&searcher] { searcher.go<true>(); });
 
   // Spawn helper threads
-  for (int i = 1; i < options.threads; i++) {
-    Search helperSearcher = searcher; // Create a searcher for each thread
-    helperThreads.emplace_back( [&helperSearcher] { helperSearcher.go<false>(); });
+  helperSearchers.reserve(options.threads - 1);
+  for (int i = 0; i < options.threads - 1; i++) {
+    helperSearchers.emplace_back(searcher);
+    helperThreads.emplace_back(&Search::go<false>, 
+                               &helperSearchers[i]);
   }
 }
 
@@ -191,4 +195,5 @@ void command_stop(Search &searcher) {
     if (thread.joinable())
         thread.join();
   helperThreads.clear();
+  helperSearchers.clear();
 }
