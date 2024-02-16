@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 
 project(
   Fodder
-  VERSION 0.1
+  VERSION 0.2
   LANGUAGES CXX
   )
 
