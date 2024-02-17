@@ -32,3 +32,4 @@ Changes are listed here in chronological order.
 + Slightly less broken UCI
 + Added README.md
 + Threefold repetition detection
++ Soft TM + time limit adjustment   (~75 elo)
