@@ -144,7 +144,7 @@ void command_setoption(Options &options) {
 }
 
 void command_go(Search &searcher, Options &options) {
-  int mtg = 25;
+  int mtg = 20;
   int depth = 40;
   uint64_t nodes = UINT64_MAX;
   Time movetime = UINT64_MAX;
@@ -174,7 +174,7 @@ void command_go(Search &searcher, Options &options) {
   Time time = searcher.td.rootPos->sideToMove() == White ? wtime : btime;
   Time inc = searcher.td.rootPos->sideToMove() == White ? winc : binc;
 
-  Time allocatedTime = time/mtg + 4*inc/5;
+  Time allocatedTime = time/mtg + 3*inc/4;
 
   searcher.td.info.depth = depth;
   searcher.td.info.nodeslim = nodes;
