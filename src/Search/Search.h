@@ -55,6 +55,7 @@ struct SearchInfo { // UCI control
   // Search control
   Time starttime = 0;
   Time timelim = UINT64_MAX;
+  Time softlim = UINT64_MAX;
   int depth = 100;
   uint64_t nodeslim = UINT64_MAX;
   int movestogo = 25;

@@ -39,6 +39,10 @@ void Search::go() {
       
       // Set best move to the top PV move
       bestMove = td.pvTable.moves[0][0];
+
+      // If a depth takes over a certain amount of time to clear,
+      // it's probably not possible to clear the next depth
+      if (td.timeSpent() >= td.info.softlim) break;
     }
   } // End of iterative deepening loop
 

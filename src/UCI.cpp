@@ -144,7 +144,7 @@ void command_setoption(Options &options) {
 }
 
 void command_go(Search &searcher, Options &options) {
-  int mtg = 30;
+  int mtg = 25;
   int depth = 40;
   uint64_t nodes = UINT64_MAX;
   Time movetime = UINT64_MAX;
@@ -174,11 +174,12 @@ void command_go(Search &searcher, Options &options) {
   Time time = searcher.td.rootPos->sideToMove() == White ? wtime : btime;
   Time inc = searcher.td.rootPos->sideToMove() == White ? winc : binc;
 
-  Time allocatedTime = time/mtg + inc + 15;
+  Time allocatedTime = time/mtg + 3*inc/4 + 10;
 
   searcher.td.info.depth = depth;
   searcher.td.info.nodeslim = nodes;
   searcher.td.info.timelim = std::min(allocatedTime, movetime);
+  searcher.td.info.softlim = std::min(7*allocatedTime/10, movetime);
 
   // Join main thread if there's a previous one running
   if (mainThread.joinable()) 
