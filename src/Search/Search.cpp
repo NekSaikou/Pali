@@ -7,6 +7,7 @@ template<bool MAIN_THREAD>
 void Search::go() {
   EvalScore bestScore = 0;
   Move bestMove = Move();
+  Time timeSpentLastDepth = 0;
 
   td.sd.hashHistory.reserve(MAX_MOVE); // Pre-allocate hash history
 
@@ -42,7 +43,9 @@ void Search::go() {
 
       // If a depth takes over a certain amount of time to clear,
       // it's probably not possible to clear the next depth
-      if (td.timeSpent() >= td.info.softlim) break;
+      if (td.timeSpent() - timeSpentLastDepth >= td.info.softlim) break;
+
+      timeSpentLastDepth = td.timeSpent();
     }
   } // End of iterative deepening loop
 

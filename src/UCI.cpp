@@ -174,7 +174,7 @@ void command_go(Search &searcher, Options &options) {
   Time time = searcher.td.rootPos->sideToMove() == White ? wtime : btime;
   Time inc = searcher.td.rootPos->sideToMove() == White ? winc : binc;
 
-  Time allocatedTime = time/mtg + 3*inc/4 + 10;
+  Time allocatedTime = time/mtg + inc + 15;
 
   searcher.td.info.depth = depth;
   searcher.td.info.nodeslim = nodes;
