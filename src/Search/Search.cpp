@@ -223,7 +223,7 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
     movesMade++;
     if (mv.isQuiet()) quietMovesMade++;
 
-    // Late move redution
+    // Late move reduction
     int R = 0;
     if (!isInCheck
     &&  depth >= 2
@@ -360,7 +360,7 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
     Move mv = pickMove(ml);
 
     // SEE pruning
-    if (!staticExchangeEval(pos, mv, 8)) continue;
+    if (!staticExchangeEval(pos, mv, 50)) continue;
 
     Position posCopy = pos;
     posCopy.makeMove(mv);
