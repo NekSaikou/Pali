@@ -126,9 +126,16 @@ private:
 
     // Draw by threefold repetition
     int repetition = 0;
-    for (int i = pos.halfMove(); i >= 0; i--)
-      if (td.sd.hashHistory[i] == pos.getHash()) repetition++; 
-    if (repetition >= 2) return true;
+    for (
+      int i = td.sd.hashHistory.size()
+    ; i > std::max(static_cast<int>(td.sd.hashHistory.size()) - pos.halfMove(), 0)    
+    ; i -= 2
+    ) {
+      if (td.sd.hashHistory[i] == pos.getHash()) {
+        repetition++;
+        if (repetition >= 2) return true;
+      }
+    }
 
     if (pos.halfMove() >= 100) return true; // Draw by 50 moves rule
 
