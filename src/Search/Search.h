@@ -137,7 +137,14 @@ private:
       }
     }
 
-    if (pos.halfMove() >= 100) return true; // Draw by 50 moves rule
+    // Draw by fifty move rule
+    if (pos.halfMove() >= 100) return true;
+
+    // Draw by insufficient material
+    if (popcnt(pos.all()) <= 3
+    && (popcnt(pos.getPieceBB(Knight)) 
+    ||  popcnt(pos.getPieceBB(Knight)))
+    ) return true;
 
     return false;
   }

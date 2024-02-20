@@ -33,3 +33,4 @@ Changes are listed here in chronological order.
 + Added README.md
 + Threefold repetition detection
 + Soft TM + time limit adjustment   (~75 elo)
++ Insufficient material detection
