@@ -65,7 +65,7 @@ struct SearchInfo { // UCI control
   uint64_t nodes = 0;
 };
 
-struct ThreadData { // All information a thread need
+struct ThreadData { // All information a thread needs
   Position *rootPos;
   SearchData sd = SearchData();
   SearchInfo info = SearchInfo();
@@ -126,7 +126,7 @@ private:
 
     // Draw by threefold repetition
     int repetition = 0;
-    for (int i = td.sd.hashHistory.size(); i > pos.halfMove(); i -= 2)
+    for (int i = pos.halfMove(); i >= 0; i--)
       if (td.sd.hashHistory[i] == pos.getHash()) repetition++; 
     if (repetition >= 2) return true;
 
