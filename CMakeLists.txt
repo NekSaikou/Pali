@@ -15,7 +15,10 @@ file(GLOB_RECURSE SRC_FILES
   src/Search/NNUE/*.cpp
   )
 
-add_compile_definitions(RELEASE_BUILD=true)
+add_compile_definitions(
+  RELEASE_BUILD=true 
+  VERSION_NUMBER=${CMAKE_PROJECT_VERSION}
+  )
 
 add_compile_options(
   -O3

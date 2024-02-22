@@ -13,7 +13,8 @@ int main (int argc, char *argv[]) {
     // Position pos = Position(START_POS);
   } else {
     std::cout << "Fodder "
-              << "by Nek"
+              << VERSION_NUMBER
+              << " by Nek"
               << std::endl;
 
     uciLoop();
