@@ -15,6 +15,8 @@ file(GLOB_RECURSE SRC_FILES
   src/Search/NNUE/*.cpp
   )
 
+add_compile_definitions(RELEASE_BUILD=true)
+
 add_compile_options(
   -O3
   -flto -funroll-loops -fno-exceptions
