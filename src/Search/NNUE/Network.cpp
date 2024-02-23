@@ -5,9 +5,9 @@
 #include "../../../incbin/incbin.h"
 
 #ifdef RELEASE_BUILD
-  INCBIN(Eval, "../net/bee.net");
+INCBIN(Eval, "../net/bee.net");
 #else
-  INCBIN(Eval, "./net/bee.net");
+INCBIN(Eval, "./net/bee.net");
 #endif
 
 // This translation unit now has three symbols

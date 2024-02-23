@@ -16,7 +16,7 @@ file(GLOB_RECURSE SRC_FILES
   )
 
 add_compile_definitions(
-  RELEASE_BUILD=true 
+  RELEASE_BUILD
   VERSION_NUMBER=${CMAKE_PROJECT_VERSION}
   )
 

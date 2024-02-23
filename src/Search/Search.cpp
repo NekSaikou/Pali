@@ -24,11 +24,15 @@ void Search::go() {
 
     // Only use info from main thread
     if constexpr (MAIN_THREAD) {
+      double nps = td.timeSpent() > 5 
+       ? td.info.nodes/static_cast<double>(td.timeSpent()) * 1000.0
+       : 0.0;
       std::cout << "info score cp " << bestScore
                 << " seldepth " << td.info.seldepth
                 << " depth " << d
                 << " nodes " << td.info.nodes
                 << " time " << td.timeSpent()
+                << " nps " << static_cast<unsigned int>(nps)
                 << " pv ";
 
       // Print out PV line

@@ -1,6 +1,8 @@
 #include "UCI.h"
 
-constexpr bool DEBUG = false;
+#ifndef VERSION_NUMBER 
+std::string VERSION_NUMBER = "DEBUG";
+#endif
 
 int main (int argc, char *argv[]) {
   // lookup tables initialization
@@ -9,14 +11,10 @@ int main (int argc, char *argv[]) {
   initZobrist();
   initNNUE();
 
-  if constexpr (DEBUG) {
-    // Position pos = Position(START_POS);
-  } else {
-    std::cout << "Fodder "
-              << VERSION_NUMBER
-              << " by Nek"
-              << std::endl;
+  std::cout << "Fodder "
+            << VERSION_NUMBER
+            << " by Nek"
+            << std::endl;
 
-    uciLoop();
-  }
+  uciLoop();
 }
