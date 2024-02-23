@@ -34,3 +34,4 @@ Changes are listed here in chronological order.
 + Threefold repetition detection
 + Soft TM + time limit adjustment   (~75 elo)
 + Insufficient material detection
++ NPS info
