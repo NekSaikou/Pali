@@ -61,6 +61,8 @@ struct SearchInfo { // UCI control
   int movestogo = 25;
 
   // UCI outputs
+  std::vector<uint16_t> searchedPV;
+  int multiPV = 1;
   int seldepth = 0;
   uint64_t nodes = 0;
 };

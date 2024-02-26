@@ -11,7 +11,7 @@ void uciLoop();
 
 struct Options {
   int threads = 1;
-  int multipv = 0;
+  int multipv = 1;
   int hash = 16;
 };
 

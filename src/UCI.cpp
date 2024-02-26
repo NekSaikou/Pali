@@ -32,7 +32,7 @@ void uciLoop() {
     // Empty string
     if (tokens.size() == 0) continue;
 
-    if (tokens[0] == "uci") command_uci();
+    if      (tokens[0] == "uci") command_uci();
     else if (tokens[0] == "quit") break;
     else if (tokens[0] == "exit") break;
     else if (tokens[0] == "isready") command_isready();
@@ -48,9 +48,10 @@ void uciLoop() {
 void command_uci() {
   std::cout << "id name Fodder\n"
             << "id author Nek\n"
-            << "uciok\n"
+            << "option name MultiPV type spin default 1 min 1 max 16\n"
             << "option name Hash type spin default 16 min 1 max 65536\n"
-            << "option name Threads type spin default 1 min 1 max 512" << std::endl;
+            << "option name Threads type spin default 1 min 1 max 512\n"
+            << "uciok" << std::endl;
 }
 
 void command_isready() {
@@ -138,6 +139,10 @@ void command_setoption(Options &options) {
     options.threads = std::stoi(tokens[4]);
     std::cout << "Set Threads to " << options.threads << "\n";
   }
+  else if (tokens[2] == "MultiPV") {
+    options.multipv = std::stoi(tokens[4]);
+    std::cout << "Set MultiPV to " << options.multipv << "\n";
+  }
   else {
     std::cerr << "Invalid option \"" << tokens[2] << "\"" << std::endl;
   }
@@ -160,8 +165,11 @@ void command_go(Search &searcher, Options &options) {
     return;
   }
 
+  // Set PV count
+  searcher.td.info.multiPV = options.multipv;
+
   for (int i = 0; i < tokens.size(); i++) {
-    if (tokens[i] == "movestogo") mtg = std::stoi(tokens[i + 1]);
+    if      (tokens[i] == "movestogo") mtg = std::stoi(tokens[i + 1]);
     else if (tokens[i] == "movetime") movetime = std::stoi(tokens[i + 1]);
     else if (tokens[i] == "wtime") wtime = std::stoi(tokens[i + 1]);
     else if (tokens[i] == "btime") btime = std::stoi(tokens[i + 1]);

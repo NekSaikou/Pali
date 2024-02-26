@@ -13,43 +13,54 @@ void Search::go() {
 
   td.reset(); // Start timer and clear UCI info
 
+  // Only do multi PV search on main thread
+  int multiPV = MAIN_THREAD ? td.info.multiPV : 1;
+
   // Iterative deepening
   for (int d = 1; d <= td.info.depth; d++) {
-    bestScore = d >= 6
-      ? aspirationSearch(d, bestScore)
-      : negamax(*td.rootPos, d, -INFINITY_SCORE, INFINITY_SCORE);
+    // Clear used PV lines
+    td.info.searchedPV.clear();
+    for (int mpv = 1; mpv <= multiPV; mpv++) {
+      bestScore = d >= 6
+        ? aspirationSearch(d, bestScore)
+        : negamax(*td.rootPos, d, -INFINITY_SCORE, INFINITY_SCORE);
 
-    // Stop the search if time ran out
-    if (td.mustStop()) break;
+      // Stop the search if time ran out
+      if (td.mustStop()) break;
 
-    // Only use info from main thread
-    if constexpr (MAIN_THREAD) {
-      double nps = td.timeSpent() > 5 
-       ? td.info.nodes/static_cast<double>(td.timeSpent()) * 1000.0
-       : 0.0;
-      std::cout << "info score cp " << bestScore
-                << " seldepth " << td.info.seldepth
-                << " depth " << d
-                << " nodes " << td.info.nodes
-                << " time " << td.timeSpent()
-                << " nps " << static_cast<unsigned int>(nps)
-                << " pv ";
+      // Only print info from main thread
+      if constexpr (MAIN_THREAD) {
+        double nps = td.timeSpent() > 5 
+         ? td.info.nodes/static_cast<double>(td.timeSpent()) * 1000.0
+         : 0.0;
+        std::cout << "info score cp " << bestScore
+                  << " multipv " << mpv
+                  << " seldepth " << td.info.seldepth
+                  << " depth " << d
+                  << " nodes " << td.info.nodes
+                  << " time " << td.timeSpent()
+                  << " nps " << static_cast<unsigned int>(nps)
+                  << " pv ";
 
-      // Print out PV line
-      for (int i = 0; i < *td.pvTable.length; i++) {
-        std::cout << " " << td.pvTable.moves[0][i].string();
+        // Print out PV line
+        for (int i = 0; i < *td.pvTable.length; i++) {
+          std::cout << " " << td.pvTable.moves[0][i].string();
+        }
+        // End line then flush the buffer
+        std::cout << std::endl;
+        
+        // Set best move to the top PV move
+        bestMove = td.pvTable.moves[0][0];
+
+        // Exclude searched move from the next multi PV search
+        td.info.searchedPV.push_back(bestMove.compress());
+
+        // If a depth takes over a certain amount of time to clear,
+        // it's probably not possible to clear the next depth
+        if (td.timeSpent() - timeSpentLastDepth >= td.info.softlim) break;
+
+        timeSpentLastDepth = td.timeSpent();
       }
-      // End line then flush the buffer
-      std::cout << std::endl;
-      
-      // Set best move to the top PV move
-      bestMove = td.pvTable.moves[0][0];
-
-      // If a depth takes over a certain amount of time to clear,
-      // it's probably not possible to clear the next depth
-      if (td.timeSpent() - timeSpentLastDepth >= td.info.softlim) break;
-
-      timeSpentLastDepth = td.timeSpent();
     }
   } // End of iterative deepening loop
 
@@ -199,8 +210,15 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   int movesMade = 0;
   int quietMovesMade = 0;
   while (ml.getLength()) {
+    moveLoopStart:;
     Move mv = pickMove(ml);
     MoveScore mvScore = ml.getScore(ml.getLength());
+
+    // Duplicate PV line
+    if (td.sd.ply == 1)
+      for (uint16_t searched : td.info.searchedPV)
+        if (mv.compress() == searched) 
+          goto moveLoopStart;
 
     // Late move pruning
     if (!isPVNode
