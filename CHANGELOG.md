@@ -35,3 +35,4 @@ Changes are listed here in chronological order.
 + Soft TM + time limit adjustment   (~75 elo)
 + Insufficient material detection
 + NPS info
++ Multi-PV support
