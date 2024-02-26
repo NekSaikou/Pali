@@ -209,8 +209,8 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   // Move loop starts
   int movesMade = 0;
   int quietMovesMade = 0;
+  moveLoopStart:;
   while (ml.getLength()) {
-    moveLoopStart:;
     Move mv = pickMove(ml);
     MoveScore mvScore = ml.getScore(ml.getLength());
 

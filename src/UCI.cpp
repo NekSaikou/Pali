@@ -167,6 +167,7 @@ void command_go(Search &searcher, Options &options) {
 
   // Set PV count
   searcher.td.info.multiPV = options.multipv;
+  searcher.td.info.searchedPV.clear();
 
   for (int i = 0; i < tokens.size(); i++) {
     if      (tokens[i] == "movestogo") mtg = std::stoi(tokens[i + 1]);
