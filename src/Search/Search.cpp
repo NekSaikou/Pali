@@ -40,7 +40,7 @@ void Search::go() {
                   << " nodes " << td.info.nodes
                   << " time " << td.timeSpent()
                   << " nps " << static_cast<unsigned int>(nps)
-                  << " pv ";
+                  << " pv";
 
         // Print out PV line
         for (int i = 0; i < *td.pvTable.length; i++) {
@@ -78,8 +78,14 @@ void Search::go() {
 
 EvalScore Search::aspirationSearch(int depth, EvalScore score) {
   EvalScore delta = 15; // Extra starting window
-  EvalScore alpha = std::max(static_cast<EvalScore>(score - delta), static_cast<EvalScore>(-INFINITY_SCORE));
-  EvalScore beta =  std::min(static_cast<EvalScore>(score + delta), static_cast<EvalScore>(INFINITY_SCORE));
+  EvalScore alpha = std::max(
+    static_cast<EvalScore>(score - delta),
+    static_cast<EvalScore>(-INFINITY_SCORE)
+  );
+  EvalScore beta =  std::min(
+    static_cast<EvalScore>(score + delta),
+    static_cast<EvalScore>(INFINITY_SCORE)
+  );
 
   int d = depth; // Depth used for search
 
@@ -102,7 +108,12 @@ EvalScore Search::aspirationSearch(int depth, EvalScore score) {
   }
 }
 
-EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore beta) {
+EvalScore Search::negamax(
+  Position &pos,
+  int depth,
+  EvalScore alpha,
+  EvalScore beta
+) {
   Bound bound = BoundAlpha; // Cutoff bound to be stored in TT
   uint16_t bestMove = 0; // Best move to be stored in TT
 
@@ -321,7 +332,14 @@ EvalScore Search::negamax(Position &pos, int depth, EvalScore alpha, EvalScore b
   if (movesMade == 0) return isInCheck ? -CHECKMATE_SCORE + td.sd.ply : 0;
 
   // Store TT entry
-  hashTable->storeHashEntry(pos.getHash(), bestMove, score, eval, bound, depth);
+  hashTable->storeHashEntry(
+    pos.getHash(),
+    bestMove,
+    score,
+    eval,
+    bound,
+    depth
+  );
 
   return alpha;
 }
@@ -409,7 +427,14 @@ EvalScore Search::qsearch(Position &pos, EvalScore alpha, EvalScore beta) {
   td.sd.ply--;
 
   // Store TT entry
-  hashTable->storeHashEntry(pos.getHash(), bestMove, eval, staticEval, bound, 0);
+  hashTable->storeHashEntry(
+    pos.getHash(),
+    bestMove, 
+    eval,
+    staticEval,
+    bound,
+    0
+  );
 
   return eval;
 }
