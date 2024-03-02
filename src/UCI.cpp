@@ -150,7 +150,7 @@ void command_setoption(Options &options) {
 
 void command_go(Search &searcher, Options &options) {
   int mtg = 20;
-  int depth = 40;
+  int depth = 99;
   uint64_t nodes = UINT64_MAX;
   Time movetime = UINT64_MAX;
   Time wtime = UINT64_MAX;

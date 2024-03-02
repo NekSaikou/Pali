@@ -37,3 +37,4 @@ Changes are listed here in chronological order.
 + NPS info
 + Multi-PV support
 + Hashfull info
++ Mate detection

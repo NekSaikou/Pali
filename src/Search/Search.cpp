@@ -31,10 +31,17 @@ void Search::go() {
 
       // Only print info from main thread
       if constexpr (MAIN_THREAD) {
+        // Mate detection
+        int mate = 0;
+        if (bestScore >= CHECKMATE_SCORE - MAX_PLY)
+          mate = (CHECKMATE_SCORE - bestScore + 1) / 2;
+
         double nps = td.timeSpent() > 5 
          ? td.info.nodes/static_cast<double>(td.timeSpent()) * 1000.0
          : 0.0;
-        std::cout << "info score cp " << bestScore
+        std::cout << "info score" 
+                  << (mate ? " mate " : " cp ")
+                  << (mate ? mate : bestScore)
                   << " multipv " << mpv
                   << " seldepth " << td.info.seldepth
                   << " depth " << d
