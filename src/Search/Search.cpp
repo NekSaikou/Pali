@@ -21,9 +21,10 @@ void Search::go() {
     // Clear used PV lines
     td.info.searchedPV.clear();
     for (int mpv = 1; mpv <= multiPV; mpv++) {
+      Position rootPos = *td.rootPos;
       bestScore = d >= 6
         ? aspirationSearch(d, bestScore)
-        : negamax(*td.rootPos, d, -INFINITY_SCORE, INFINITY_SCORE);
+        : negamax(rootPos, d, -INFINITY_SCORE, INFINITY_SCORE);
 
       // Stop the search if time ran out
       if (td.mustStop()) break;
@@ -90,7 +91,8 @@ EvalScore Search::aspirationSearch(int depth, EvalScore score) {
   int d = depth; // Depth used for search
 
   while (true) {
-    score = negamax(*td.rootPos, d, alpha, beta);
+    Position rootPos = *td.rootPos;
+    score = negamax(rootPos, d, alpha, beta);
 
     // Stop the search if time ran out
     if (td.mustStop()) return 0;
