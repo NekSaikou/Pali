@@ -95,6 +95,15 @@ public:
     );
   }
 
+  [[nodiscard]] inline int hashfull() {
+    int cnt = 0;
+
+    for (int i = 1; i <= 1000; i++) 
+      if (data[i].bound() != BoundNone) cnt++;
+
+    return cnt;
+  }
+
   inline void prefetch(HashKey hash) {
     __builtin_prefetch(&this->data[this->index(hash)]);
   }

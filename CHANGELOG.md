@@ -36,3 +36,4 @@ Changes are listed here in chronological order.
 + Insufficient material detection
 + NPS info
 + Multi-PV support
++ Hashfull info

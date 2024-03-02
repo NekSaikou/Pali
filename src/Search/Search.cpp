@@ -41,6 +41,7 @@ void Search::go() {
                   << " nodes " << td.info.nodes
                   << " time " << td.timeSpent()
                   << " nps " << static_cast<unsigned int>(nps)
+                  << " hashfull " << hashTable->hashfull()
                   << " pv";
 
         // Print out PV line
