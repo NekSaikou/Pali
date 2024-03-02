@@ -97,10 +97,16 @@ EvalScore Search::aspirationSearch(int depth, EvalScore score) {
 
     if (score <= alpha) {
       beta = (alpha + beta) / 2;
-      alpha = std::max(static_cast<EvalScore>(alpha - delta), static_cast<EvalScore>(-INFINITY_SCORE));
+      alpha = std::max(
+        static_cast<EvalScore>(alpha - delta),
+        static_cast<EvalScore>(-INFINITY_SCORE)
+      );
       d = depth;
     } else if (score >= beta) {
-      beta =  std::min(static_cast<EvalScore>(beta + delta), static_cast<EvalScore>(INFINITY_SCORE));
+      beta =  std::min(
+        static_cast<EvalScore>(beta + delta),
+        static_cast<EvalScore>(INFINITY_SCORE)
+      );
       depth--;
     } else return score;
 
