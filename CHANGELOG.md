@@ -38,3 +38,4 @@ Changes are listed here in chronological order.
 + Multi-PV support
 + Hashfull info
 + Mate detection
++ Clear Hash option

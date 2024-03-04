@@ -38,7 +38,7 @@ void uciLoop() {
     else if (tokens[0] == "isready") command_isready();
     else if (tokens[0] == "ucinewgame") command_ucinewgame(searcher, options);
     else if (tokens[0] == "position") command_position(searcher);
-    else if (tokens[0] == "setoption") command_setoption(options);
+    else if (tokens[0] == "setoption") command_setoption(searcher, options);
     else if (tokens[0] == "stop") command_stop(searcher);
     else if (tokens[0] == "go") command_go(searcher, options);
     else std::cerr << "Invalid UCI command \"" << input << "\"" << std::endl;
@@ -49,7 +49,8 @@ void command_uci() {
   std::cout << "id name Fodder\n"
             << "id author Nek\n"
             << "option name MultiPV type spin default 1 min 1 max 16\n"
-            << "option name Hash type spin default 16 min 1 max 65536\n"
+            << "option name Hash type spin default 16 min 1 max 262144\n"
+            << "option name Clear Hash type button\n"
             << "option name Threads type spin default 1 min 1 max 512\n"
             << "uciok" << std::endl;
 }
@@ -124,7 +125,7 @@ void command_position(Search &searcher) {
   }
 }
 
-void command_setoption(Options &options) {
+void command_setoption(Search &searcher, Options &options) {
   std::vector<std::string> tokens = splitWS(input);
   if (tokens.size() < 4) {
     std::cerr << "Missing arguments" << std::endl;
@@ -133,7 +134,11 @@ void command_setoption(Options &options) {
 
   if (tokens[2] == "Hash") {
     options.hash = std::stoi(tokens[4]);
+    searcher.hashTable->init(options.hash);
     std::cout << "Set Hash to " << options.hash << "\n";
+  }
+  else if (tokens[2] == "Clear" && tokens[3] == "Hash") {
+    searcher.hashTable->clear();
   }
   else if (tokens[2] == "Threads") {
     options.threads = std::stoi(tokens[4]);

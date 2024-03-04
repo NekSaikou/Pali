@@ -23,7 +23,7 @@ void command_ucinewgame(Search &searcher, Options &options);
 
 void command_position(Search &searcher);
 
-void command_setoption(Options &options);
+void command_setoption(Search &searcher, Options &options);
 
 void command_go(Search &searcher, Options &options);
 
