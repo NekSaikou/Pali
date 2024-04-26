@@ -1,6 +1,7 @@
 #include "SearchThread.h"
 
 #include "../core/Move.h"
+#include "../core/Piece.h"
 #include "../core/Position.h"
 #include "MovePicker.h"
 #include "TTable.h"
@@ -55,8 +56,6 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
     Eval = Tte->Eval;
     BestMove = Tte->BestMove;
     TTHit = true;
-  } else {
-    Eval = Pos.evaluate();
   }
 
   // TT cutoff
@@ -74,6 +73,31 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
 
     case Bound::Exact:
       return TTScore;
+    }
+  }
+
+  if (!TTHit)
+    Eval = Pos.evaluate();
+
+  if (!IsPVNode && !IsInCheck) {
+    // Null move pruning:
+    // If our position is so good that we still beat β
+    // even if we give our opponent a free move,
+    // then this node is likely going to fail high.
+    //
+    // Doesn't work in king and pawn endgame due to zugzwang
+    if (Eval >= β && Depth >= 3 &&
+        (Pos.getBB(Piece::Pawn) | Pos.getBB(Piece::King)) != Pos.allBB()) {
+      int R = 3 + Depth / 3 + std::min((Eval - β) / 200, 3);
+
+      const_cast<Position &>(Pos).changeSide();
+
+      int NmpScore = -negamax(Pos, Depth - R, Ply + 1, -β, -β + 1);
+
+      const_cast<Position &>(Pos).changeSide();
+
+      if (NmpScore >= β)
+        return NmpScore >= MATE_SCORE - MAX_PLY ? β : NmpScore;
     }
   }
 
