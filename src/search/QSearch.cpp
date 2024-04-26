@@ -19,6 +19,9 @@ int SearchThread::qsearch(const Position &Pos, int Ply, int α, int β) {
     }
   }
 
+  if (Pos.isDraw())
+    return 0;
+
   SelDepth = std::max(SelDepth, Ply);
 
   int Eval = Pos.evaluate();

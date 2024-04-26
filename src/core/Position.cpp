@@ -345,7 +345,7 @@ bool Position::makeMove(Move Mv) {
   // and update EpSQ in case of double push on this squar
   Square EpCaptureSq = To - Square(Stm ? 8 : -8);
 
-  ++Hmc;
+  OccuredPos.push_back(Hash);
 
   // Pawn moved, half move clock resets
   if (Pc == Piece::Pawn)

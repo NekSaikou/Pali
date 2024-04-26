@@ -33,6 +33,8 @@ class Position {
 
   std::array<Accumulator, 2> Acc;
 
+  std::vector<uint64_t> OccuredPos;
+
 public:
   /// Position constructor: accepts full FEN as input and
   /// parse it into the position
@@ -54,6 +56,8 @@ public:
   [[nodiscard]] Color stm() const { return Stm; }
 
   [[nodiscard]] uint64_t hash() const { return Hash; }
+
+  [[nodiscard]] int hmc() const { return Hmc; }
 
   /// Return a bitboard containing every piece targeting the given Square
   [[nodiscard]] Bitboard attacksAt(Square Sq) const;
@@ -92,11 +96,26 @@ public:
       EpSq = Square::None;
     }
 
+    ++Hmc;
+
     Stm = Stm.inverse();
     updateHash(getStmKey());
   }
 
-  int evaluate() const;
+  [[nodiscard]] int evaluate() const;
+
+  [[nodiscard]] bool isDraw() const {
+    if (Hmc >= 100)
+      return true;
+
+    int Repeat = 1;
+
+    for (int i = 4; i <= Hmc; i += 2)
+      if (OccuredPos[i] == Hash)
+        ++Repeat;
+
+    return Repeat >= 3;
+  }
 
 private:
   void updateHash(uint64_t Key) { Hash ^= Key; }
