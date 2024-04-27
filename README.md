@@ -1,6 +1,6 @@
-## Buolding
+## Building
 ``` sh
-$ git clone https://github.com/nekSaikou/Pali
+$ git clone https://github.com/NekSaikou/Pali
 $ cd Pali
 $ ./build.sh
 ```
