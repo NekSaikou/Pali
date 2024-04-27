@@ -24,6 +24,9 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
   if (Stopped)
     return 0;
 
+  if (Pos.isDraw())
+    return 0;
+
   // Node has full window
   bool IsPVNode = β - α > 1;
 
@@ -44,9 +47,6 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
   // Leaf node or max ply exceeded
   if (Depth <= 0 || Ply >= MAX_PLY - 1)
     return qsearch(Pos, Ply + 1, α, β);
-
-  if (Pos.isDraw())
-    return 0;
 
   int Eval;
   int BestScore = -INF_SCORE;

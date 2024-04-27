@@ -105,7 +105,7 @@ public:
   [[nodiscard]] int evaluate() const;
 
   [[nodiscard]] bool isDraw() const {
-    if (Hmc >= 100)
+    if (Hmc > 100)
       return true;
 
     int Repeat = 1;
