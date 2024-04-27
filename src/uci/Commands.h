@@ -23,7 +23,7 @@ void uci();
 void isready();
 
 void ucinewgame(const std::vector<std::string> &Params, Position &RootPos,
-                Options &Opts);
+                Options &Opts, TTable &TTable, HTable &HTable);
 
 void position(const std::vector<std::string> &Params, Position &RootPos);
 

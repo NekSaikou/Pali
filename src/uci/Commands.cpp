@@ -44,10 +44,10 @@ void pali::command::uci() {
 void pali::command::isready() { std::cout << "readyok\n"; }
 
 void pali::command::ucinewgame(const std::vector<std::string> &Params,
-                               Position &RootPos, Options &Opt) {
+                               Position &RootPos, Options &Opt, TTable &TTable, HTable &HTable) {
   RootPos = Position(STARTPOS);
-
-  // TODO: Clear/resize hash table
+  TTable.clear();
+  HTable.clear();
 }
 
 void pali::command::position(const std::vector<std::string> &Params,

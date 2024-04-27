@@ -110,9 +110,13 @@ public:
 
     int Repeat = 1;
 
-    for (int i = 4; i <= Hmc; i += 2)
-      if (OccuredPos[OccuredPos.size() - i] == Hash)
+    for (int i = OccuredPos.size() - 2;  i >= 0; i -= 2) {
+      if (i < OccuredPos.size() - Hmc)
+        return false;
+
+      if (OccuredPos[i] == Hash)
         ++Repeat;
+    }
 
     return Repeat >= 3;
   }

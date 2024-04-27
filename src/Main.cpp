@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
       command::isready();
 
     else if (Cmd == "ucinewgame")
-      command::ucinewgame(Params, RootPos, Opts);
+      command::ucinewgame(Params, RootPos, Opts, TTable, HTable);
 
     else if (Cmd == "position")
       command::position(Params, RootPos);

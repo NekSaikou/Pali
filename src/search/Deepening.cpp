@@ -16,6 +16,8 @@ template <bool MAIN> void SearchThread::go(Position &RootPos) {
   Move BestMove = Move();
   uint64_t PrevTimeSpent = 0;
 
+  HTable.softReset();
+
   // Iterative deepening
   for (int Depth = 1; Depth <= DepthLim; ++Depth) {
     SearchedPV.clear();
