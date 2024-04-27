@@ -10,7 +10,7 @@
 #include <tuple>
 #include <utility>
 
-namespace fodder {
+namespace pali {
 
 /// Maximum number of possible moves a position can contain
 constexpr int MAX_MOVE = 218;
@@ -100,4 +100,4 @@ constexpr Move NULL_MOVE(0, 0, MFlag::Normal , Piece::Pawn);
 
 using MoveList = ArrayVec<Move, MAX_MOVE>;
 
-} // namespace fodder
+} // namespace pali

@@ -9,7 +9,7 @@
 #include <cstdint>
 #include <iostream>
 
-using namespace fodder;
+using namespace pali;
 
 uint64_t subperft(const Position &Pos, int Depth, std::atomic<bool> &Stopped) {
   if (Depth == 0 || Stopped)
@@ -33,7 +33,7 @@ uint64_t subperft(const Position &Pos, int Depth, std::atomic<bool> &Stopped) {
   return Nodes;
 }
 
-uint64_t fodder::perft(const Position &Pos, int Depth,
+uint64_t pali::perft(const Position &Pos, int Depth,
                           std::atomic<bool> &Stopped) {
   uint64_t TimeStart = getTimeMs();
   uint64_t NodesTotal = 0;

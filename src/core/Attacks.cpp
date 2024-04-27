@@ -7,7 +7,7 @@
 #include <array>
 #include <cstdint>
 
-using namespace fodder;
+using namespace pali;
 
 Bitboard PAWN_ATTACKS[64][2];
 Bitboard KNIGHT_ATTACKS[64];
@@ -18,23 +18,23 @@ std::array<std::array<Bitboard, 4096>, 64> ROOK_ATTACKS;
 
 Bitboard BETWEEN_SQ[64][64];
 
-Bitboard fodder::getPawnAttack(Square Sq, Color Col) {
+Bitboard pali::getPawnAttack(Square Sq, Color Col) {
   return PAWN_ATTACKS[Sq][Col];
 }
 
-Bitboard fodder::getKnightAttack(Square Sq) { return KNIGHT_ATTACKS[Sq]; }
+Bitboard pali::getKnightAttack(Square Sq) { return KNIGHT_ATTACKS[Sq]; }
 
-Bitboard fodder::getKingAttack(Square Sq) { return KING_ATTACKS[Sq]; }
+Bitboard pali::getKingAttack(Square Sq) { return KING_ATTACKS[Sq]; }
 
-Bitboard fodder::getBishopAttack(Square Sq, Bitboard Occ) {
+Bitboard pali::getBishopAttack(Square Sq, Bitboard Occ) {
   return BISHOP_ATTACKS[Sq][BISHOP_MAGIC[Sq].magicIndex(Occ)];
 }
 
-Bitboard fodder::getRookAttack(Square Sq, Bitboard Occ) {
+Bitboard pali::getRookAttack(Square Sq, Bitboard Occ) {
   return ROOK_ATTACKS[Sq][ROOK_MAGIC[Sq].magicIndex(Occ)];
 }
 
-Bitboard fodder::getBetweenSq(Square Sq1, Square Sq2) {
+Bitboard pali::getBetweenSq(Square Sq1, Square Sq2) {
   return BETWEEN_SQ[Sq1][Sq2];
 }
 
@@ -171,7 +171,7 @@ void initBetweenSq() {
   }
 }
 
-void fodder::initAttackTables() {
+void pali::initAttackTables() {
   initPawnAttack();
   initKnightAttack();
   initKingAttack();

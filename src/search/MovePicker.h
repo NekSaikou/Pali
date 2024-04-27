@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <utility>
 
-namespace fodder {
+namespace pali {
 
 /// Manage move generation and ordering
 struct MovePicker {
@@ -39,4 +39,4 @@ private:
   void scoreQuiet();
 };
 
-} // namespace fodder
+} // namespace pali

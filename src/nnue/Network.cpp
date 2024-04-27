@@ -4,13 +4,13 @@
 #include <ios>
 #include <string>
 
-using namespace fodder;
+using namespace pali;
 
-Network fodder::NNUE;
+Network pali::NNUE;
 
 void Accumulator::reset() { Data = NNUE.InputBias.Data; }
 
-void fodder::initNNUE(std::string Path) {
+void pali::initNNUE(std::string Path) {
   std::ifstream(Path.substr(0, Path.find_last_of("/")) +
                     "/../resources/jigglypuff.nnue",
                 std::ios::binary)

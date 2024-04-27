@@ -9,7 +9,7 @@
 #include <cstdint>
 #include <cstdlib>
 
-using namespace fodder;
+using namespace pali;
 
 Move pickMove(MoveList &Ml);
 bool isPsuedoLegal(const Position &Pos, Move Mv);

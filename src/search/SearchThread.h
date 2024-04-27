@@ -8,7 +8,7 @@
 #include <atomic>
 #include <cstdint>
 
-namespace fodder {
+namespace pali {
 
 // Search scores have to fit into 16 bits
 // so they can be stored efficiently in TT
@@ -84,4 +84,4 @@ private:
   }
 };
 
-} // namespace fodder
+} // namespace pali

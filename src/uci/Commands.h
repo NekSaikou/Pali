@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string>
 
-namespace fodder {
+namespace pali {
 
 struct Options {
   int Hash = 16;
@@ -37,4 +37,4 @@ void exit();
 
 } // namespace command
 
-} // namespace fodder
+} // namespace pali

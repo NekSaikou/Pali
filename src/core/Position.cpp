@@ -16,7 +16,7 @@
 #include <string>
 #include <utility>
 
-using namespace fodder;
+using namespace pali;
 
 Position::Position(const std::string &Fen) {
   Acc[0] = NNUE.InputBias;

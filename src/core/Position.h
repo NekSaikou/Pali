@@ -14,7 +14,7 @@
 #include <string>
 #include <utility>
 
-namespace fodder {
+namespace pali {
 
 constexpr char const *STARTPOS =
     "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -166,4 +166,4 @@ private:
   }
 };
 
-} // namespace fodder
+} // namespace pali

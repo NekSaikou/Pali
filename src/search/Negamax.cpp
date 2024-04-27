@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <cstdint>
 
-using namespace fodder;
+using namespace pali;
 
 int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
                           int β) {

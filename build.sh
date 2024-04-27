@@ -13,4 +13,4 @@ cmake -DCMAKE_CXX_COMPILER=clang++\
 
 cmake --build .
 
-../bin/Fodder
+../bin/Pali

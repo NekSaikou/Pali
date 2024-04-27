@@ -5,7 +5,7 @@
 #include <atomic>
 #include <cstdint>
 
-namespace fodder {
+namespace pali {
 
 uint64_t perft(const Position &Pos, int Depth, std::atomic<bool> &Stopped);
 

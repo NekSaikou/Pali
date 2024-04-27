@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <cstdint>
 
-using namespace fodder;
+using namespace pali;
 
 int SearchThread::qsearch(const Position &Pos, int Ply, int α, int β) {
   // Increment node count and perform a checkup every 2048 nodes

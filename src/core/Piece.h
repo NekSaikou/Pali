@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace fodder {
+namespace pali {
 
 /// Chess piece
 class Piece {
@@ -45,4 +45,4 @@ class Pawn : public Piece {
 
 };
 
-} // namespace fodder
+} // namespace pali

@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace fodder {
+namespace pali {
 
 /// Side color
 class Color {
@@ -26,4 +26,4 @@ public:
   [[nodiscard]] bool isWhite() const { return Data == White; }
 };
 
-} // namespace fodder
+} // namespace pali

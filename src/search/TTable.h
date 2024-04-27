@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <vector>
 
-namespace fodder {
+namespace pali {
 
 enum class Bound { Upper, Lower, Exact };
 
@@ -103,4 +103,4 @@ public:
   }
 };
 
-} // namespace fodder
+} // namespace pali

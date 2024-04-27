@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 
 project(
-  Fodder
+  Pali
   VERSION 0.1
   LANGUAGES CXX
   )
@@ -29,4 +29,4 @@ add_link_options(
   # -fsanitize=undefined -fsanitize=address
   )
 
-add_executable(Fodder ${SRC_FILES})
+add_executable(Pali ${SRC_FILES})

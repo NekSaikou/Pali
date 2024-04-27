@@ -15,14 +15,14 @@
 char const *VERSION_NUMBER = "DEBUG";
 #endif
 
-using namespace fodder;
+using namespace pali;
 
 int main(int argc, char *argv[]) {
   initAttackTables();
   initZobrist();
   initNNUE(argv[0]);
 
-  std::cout << "Fodder " << VERSION_NUMBER << " by Nek" << std::endl;
+  std::cout << "Pali " << VERSION_NUMBER << " by Nek" << std::endl;
 
   Options Opts;
   Position RootPos(STARTPOS);

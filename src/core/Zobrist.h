@@ -5,7 +5,7 @@
 #include "Square.h"
 #include <cstdint>
 
-namespace fodder {
+namespace pali {
 
 /// Initialize Zobrist keys
 void initZobrist();
@@ -27,4 +27,4 @@ uint64_t getCastleKey(uint8_t Rights);
 /// Return Zobrist key of a side to move color
 uint64_t getStmKey();
 
-} // namespace fodder
+} // namespace pali

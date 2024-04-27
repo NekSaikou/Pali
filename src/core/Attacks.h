@@ -6,7 +6,7 @@
 
 #include <array>
 
-namespace fodder {
+namespace pali {
 
 /// Return a bitboard containing all squares that a pawn can attack
 [[nodiscard]] Bitboard getPawnAttack(Square Sq, Color Col);
@@ -35,4 +35,4 @@ namespace fodder {
 /// Initialize attack lookup tables for all pieces
 void initAttackTables();
 
-} // namespace fodder
+} // namespace pali

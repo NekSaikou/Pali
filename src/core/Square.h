@@ -4,7 +4,7 @@
 
 #include <cstdint>
 
-namespace fodder {
+namespace pali {
 
 /// Wrapper class for int8_t representing square number
 /// starts from 0 representing a8 to 63 representing h1
@@ -68,4 +68,4 @@ public:
   // clang-format on
 };
 
-} // namespace fodder
+} // namespace pali

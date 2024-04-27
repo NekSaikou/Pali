@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace fodder {
+namespace pali {
 
 /// Stack-allocated vector with fixed capacity
 template <typename T, size_t CAP> class ArrayVec {
@@ -52,4 +52,4 @@ inline uint64_t getTimeMs() {
       .count();
 }
 
-} // namespace fodder
+} // namespace pali

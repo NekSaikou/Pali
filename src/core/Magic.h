@@ -5,7 +5,7 @@
 #include <array>
 #include <cstdint>
 
-namespace fodder {
+namespace pali {
 
 struct MagicEntry {
   Bitboard Mask;
@@ -156,4 +156,4 @@ constexpr std::array<MagicEntry, 64> ROOK_MAGIC = {
     {0x3e40404040404000, 0x3ffef27eebe74, 53},
     {0x7e80808080808000, 0x7645fffecbfea79e, 52}};
 
-} // namespace fodder
+} // namespace pali

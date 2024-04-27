@@ -14,7 +14,7 @@
 #include <thread>
 #include <vector>
 
-using namespace fodder;
+using namespace pali;
 
 std::thread MainThread;
 std::vector<std::thread> HelperThreads;
@@ -30,8 +30,8 @@ void joinThreads() {
   HelperThreads.clear();
 }
 
-void fodder::command::uci() {
-  std::cout << "id name Fodder\n"
+void pali::command::uci() {
+  std::cout << "id name Pali\n"
             << "id author Nek\n"
             << "option name MultiPV type spin default 1 min 1 max 16\n"
             << "option name Hash type spin default 16 min 1 max 262144\n"
@@ -40,16 +40,16 @@ void fodder::command::uci() {
             << "uciok\n";
 }
 
-void fodder::command::isready() { std::cout << "readyok\n"; }
+void pali::command::isready() { std::cout << "readyok\n"; }
 
-void fodder::command::ucinewgame(const std::vector<std::string> &Params,
+void pali::command::ucinewgame(const std::vector<std::string> &Params,
                                     Position &RootPos, Options &Opt) {
   RootPos = Position(STARTPOS);
 
   // TODO: Clear/resize hash table
 }
 
-void fodder::command::position(const std::vector<std::string> &Params,
+void pali::command::position(const std::vector<std::string> &Params,
                                   Position &RootPos) {
   for (auto It = Params.begin(); It < Params.end(); ++It) {
     if (*It == "startpos")
@@ -79,7 +79,7 @@ void fodder::command::position(const std::vector<std::string> &Params,
   }
 }
 
-void fodder::command::setoption(const std::vector<std::string> &Params,
+void pali::command::setoption(const std::vector<std::string> &Params,
                                    Options &Opts, TTable &TTable) {
   // setoption name [option name] value [value]
   for (auto It = Params.begin(); It < Params.end(); ++It) {
@@ -99,7 +99,7 @@ void fodder::command::setoption(const std::vector<std::string> &Params,
   }
 }
 
-void fodder::command::go(const std::vector<std::string> &Params,
+void pali::command::go(const std::vector<std::string> &Params,
                             const Position &RootPos, Options &Opts,
                             std::atomic<bool> &Stopped, TTable &TTable) {
   // Join any running thread
@@ -166,13 +166,13 @@ void fodder::command::go(const std::vector<std::string> &Params,
         [St](Position Pos) { SearchThread(St).go<false>(Pos); }, RootPos));
 }
 
-void fodder::command::stop(std::atomic<bool> &Stopped) {
+void pali::command::stop(std::atomic<bool> &Stopped) {
   Stopped = true;
 
   joinThreads();
 }
 
-void fodder::command::exit() {
+void pali::command::exit() {
   joinThreads();
 
   std::exit(0);

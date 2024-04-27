@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <vector>
 
-namespace fodder {
+namespace pali {
 
 /// Wrapper class for uint64_t representing the board
 class Bitboard {
@@ -110,4 +110,4 @@ public:
   static constexpr uint64_t FILE_H = 0x8080808080808080;
 };
 
-} // namespace fodder
+} // namespace pali

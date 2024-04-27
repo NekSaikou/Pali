@@ -5,7 +5,7 @@
 #include <memory>
 #include <utility>
 
-namespace fodder {
+namespace pali {
 
 using NNUEIndices = std::pair<std::size_t, std::size_t>;
 
@@ -45,4 +45,4 @@ inline std::pair<std::size_t, std::size_t> nnueIdx(int Col, int Pc, int Sq) {
   return {WhiteIdx, BlackIdx};
 }
 
-} // namespace fodder
+} // namespace pali

@@ -6,7 +6,7 @@
 #include <cstdint>
 #include <iostream>
 
-using namespace fodder;
+using namespace pali;
 
 template void SearchThread::go<true>(Position &);
 template void SearchThread::go<false>(Position &);
