@@ -111,7 +111,7 @@ public:
     int Repeat = 1;
 
     for (int i = 4; i <= Hmc; i += 2)
-      if (OccuredPos[i] == Hash)
+      if (OccuredPos[OccuredPos.size() - i] == Hash)
         ++Repeat;
 
     return Repeat >= 3;
