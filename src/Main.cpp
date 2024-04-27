@@ -3,6 +3,7 @@
 #include "core/Util.h"
 #include "core/Zobrist.h"
 #include "nnue/Network.h"
+#include "search/History.h"
 #include "search/TTable.h"
 #include "uci/Commands.h"
 
@@ -27,6 +28,7 @@ int main(int argc, char *argv[]) {
   Options Opts;
   Position RootPos(STARTPOS);
   TTable TTable;
+  thread_local HTable HTable;
   std::atomic<bool> Stopped = true;
   std::string Input;
 
@@ -56,7 +58,7 @@ int main(int argc, char *argv[]) {
       command::setoption(Params, Opts, TTable);
 
     else if (Cmd == "go")
-      command::go(Params, RootPos, Opts, Stopped, TTable);
+      command::go(Params, RootPos, Opts, Stopped, TTable, HTable);
 
     else if (Cmd == "stop")
       command::stop(Stopped);

@@ -5,6 +5,7 @@
 #include "../core/Move.h"
 #include "../core/Piece.h"
 #include "../core/Position.h"
+#include "History.h"
 
 #include <cstdint>
 #include <cstdlib>
@@ -44,8 +45,10 @@ repick:
     goNext();
 
   case GenQuiet:
-    if constexpr (!NO_QUIET)
+    if constexpr (!NO_QUIET) {
       Pos.genQuiet(QuietMl);
+      scoreQuiet();
+    }
 
     goNext();
 
@@ -62,6 +65,14 @@ repick:
 
   case Finished:
     return NULL_MOVE;
+  }
+}
+
+void MovePicker::scoreQuiet() {
+  for (Move &Mv : QuietMl) {
+    /// Butterfly history heuristic:
+    /// Give moves that cause a lot of cutoff more score
+    Mv.Score += HTable.Butterfly[Pos.stm()][Mv.From][Mv.To];
   }
 }
 

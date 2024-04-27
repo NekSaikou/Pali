@@ -2,6 +2,7 @@
 
 #include "../core/Move.h"
 #include "../core/Position.h"
+#include "History.h"
 
 #include <array>
 #include <cstdint>
@@ -17,8 +18,9 @@ struct MovePicker {
   MoveList NoisyMl;
   const Position &Pos;
   const Move BestMove;
+  HTable &HTable;
 
-  MovePicker(const Position &Pos, uint16_t PackedBM)
+  MovePicker(const Position &Pos, uint16_t PackedBM, struct HTable &HTable)
       : Pos(Pos), BestMove(
                       // Unpack best move
                       [&Pos, PackedBM]() -> Move {
@@ -26,7 +28,8 @@ struct MovePicker {
                         Piece Pc = Pos.pieceAt(From);
 
                         return {From, To, Flag, Pc};
-                      }()) {}
+                      }()),
+        HTable(HTable) {}
 
   /// Go to the next move picker stage
   void goNext() { Stage = static_cast<enum Stage>(Stage + 1); }

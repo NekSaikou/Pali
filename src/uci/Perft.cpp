@@ -34,7 +34,7 @@ uint64_t subperft(const Position &Pos, int Depth, std::atomic<bool> &Stopped) {
 }
 
 uint64_t pali::perft(const Position &Pos, int Depth,
-                          std::atomic<bool> &Stopped) {
+                     std::atomic<bool> &Stopped) {
   uint64_t TimeStart = getTimeMs();
   uint64_t NodesTotal = 0;
 

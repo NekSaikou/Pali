@@ -2,6 +2,7 @@
 
 #include "../core/Move.h"
 #include "../core/Position.h"
+#include "../search/History.h"
 #include "../search/SearchThread.h"
 #include "../search/TTable.h"
 #include "Perft.h"
@@ -43,14 +44,14 @@ void pali::command::uci() {
 void pali::command::isready() { std::cout << "readyok\n"; }
 
 void pali::command::ucinewgame(const std::vector<std::string> &Params,
-                                    Position &RootPos, Options &Opt) {
+                               Position &RootPos, Options &Opt) {
   RootPos = Position(STARTPOS);
 
   // TODO: Clear/resize hash table
 }
 
 void pali::command::position(const std::vector<std::string> &Params,
-                                  Position &RootPos) {
+                             Position &RootPos) {
   for (auto It = Params.begin(); It < Params.end(); ++It) {
     if (*It == "startpos")
       RootPos = Position(STARTPOS);
@@ -70,7 +71,6 @@ void pali::command::position(const std::vector<std::string> &Params,
         RootPos.genNoisy(Ml);
         RootPos.genQuiet(Ml);
 
-
         for (Move Mv : Ml)
           if (Mv.uciStr() == *It)
             RootPos.makeMove(Mv);
@@ -80,7 +80,7 @@ void pali::command::position(const std::vector<std::string> &Params,
 }
 
 void pali::command::setoption(const std::vector<std::string> &Params,
-                                   Options &Opts, TTable &TTable) {
+                              Options &Opts, TTable &TTable) {
   // setoption name [option name] value [value]
   for (auto It = Params.begin(); It < Params.end(); ++It) {
     if (*It == "name") {
@@ -100,8 +100,9 @@ void pali::command::setoption(const std::vector<std::string> &Params,
 }
 
 void pali::command::go(const std::vector<std::string> &Params,
-                            const Position &RootPos, Options &Opts,
-                            std::atomic<bool> &Stopped, TTable &TTable) {
+                       const Position &RootPos, Options &Opts,
+                       std::atomic<bool> &Stopped, TTable &TTable,
+                       HTable &HTable) {
   // Join any running thread
   joinThreads();
 
@@ -155,14 +156,14 @@ void pali::command::go(const std::vector<std::string> &Params,
   uint64_t Inc = RootPos.stm().isWhite() ? winc : binc;
 
   SearchThread St = SearchThread(Stopped, Time, Inc, movetime, movestogo, depth,
-                                 nodes, Opts.MultiPV, TTable);
+                                 nodes, Opts.MultiPV, TTable, HTable);
 
   MainThread = std::thread(
       [St](Position Pos) { SearchThread(St).go<true>(Pos); }, RootPos);
 
   HelperThreads.reserve(Opts.Threads - 1);
   for (int i = 1; i < Opts.Threads; i++)
-    HelperThreads.push_back(std::thread(
+    HelperThreads.emplace_back(std::thread(
         [St](Position Pos) { SearchThread(St).go<false>(Pos); }, RootPos));
 }
 

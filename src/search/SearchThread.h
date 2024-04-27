@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../core/Position.h"
+#include "History.h"
 #include "TTable.h"
 
 #include <algorithm>
@@ -50,15 +51,17 @@ struct SearchThread {
 
   PVTable PVTable;
   TTable &TTable;
+  HTable &HTable;
 
   SearchThread(std::atomic<bool> &Stopped, uint64_t Time, uint64_t Inc,
                uint64_t MoveTime, int MovesToGo, int DepthLim,
-               uint64_t NodesLim, int MultiPV, class TTable &TTable)
+               uint64_t NodesLim, int MultiPV, class TTable &TTable,
+               struct HTable &HTable)
       : Stopped(Stopped), DepthLim(DepthLim), NodesLim(NodesLim),
         MultiPV(MultiPV), StartTime(getTimeMs()),
         HardLim(std::min(MoveTime, Time / MovesToGo + 3 * Inc / 4)),
         SoftLim(HardLim == MoveTime ? MoveTime : 7 * HardLim / 10),
-        TTable(TTable) {}
+        TTable(TTable), HTable(HTable) {}
 
   template <bool MAIN> void go(Position &RootPos);
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../core/Position.h"
+#include "../search/History.h"
 #include "../search/TTable.h"
 
 #include <atomic>
@@ -26,10 +27,12 @@ void ucinewgame(const std::vector<std::string> &Params, Position &RootPos,
 
 void position(const std::vector<std::string> &Params, Position &RootPos);
 
-void setoption(const std::vector<std::string> &Params, Options &Opts, TTable &TTable);
+void setoption(const std::vector<std::string> &Params, Options &Opts,
+               TTable &TTable);
 
 void go(const std::vector<std::string> &Params, const Position &RootPos,
-        Options &Opts, std::atomic<bool> &Stopped, TTable &TTable);
+        Options &Opts, std::atomic<bool> &Stopped, TTable &TTable,
+        HTable &HTable);
 
 void stop(std::atomic<bool> &Stopped);
 
