@@ -20,6 +20,8 @@ using namespace pali;
 std::thread MainThread;
 std::vector<std::thread> HelperThreads;
 
+std::vector<HTable> HelperHTables;
+
 void joinThreads() {
   if (MainThread.joinable())
     MainThread.join();
@@ -29,6 +31,7 @@ void joinThreads() {
       Thread.join();
 
   HelperThreads.clear();
+  HelperHTables.clear();
 }
 
 void pali::command::uci() {
@@ -44,7 +47,8 @@ void pali::command::uci() {
 void pali::command::isready() { std::cout << "readyok\n"; }
 
 void pali::command::ucinewgame(const std::vector<std::string> &Params,
-                               Position &RootPos, Options &Opt, TTable &TTable, HTable &HTable) {
+                               Position &RootPos, Options &Opt, TTable &TTable,
+                               HTable &HTable) {
   RootPos = Position(STARTPOS);
   TTable.clear();
   HTable.clear();
@@ -162,9 +166,17 @@ void pali::command::go(const std::vector<std::string> &Params,
       [St](Position Pos) { SearchThread(St).go<true>(Pos); }, RootPos);
 
   HelperThreads.reserve(Opts.Threads - 1);
-  for (int i = 1; i < Opts.Threads; i++)
+  HelperHTables.reserve(Opts.Threads - 1);
+  for (int i = 0; i < Opts.Threads - 1; ++i) {
+    SearchThread St = SearchThread(Stopped, Time, Inc, movetime, movestogo, depth,
+                                   nodes, Opts.MultiPV, TTable, HelperHTables[i]);
+    HelperHTables.push_back(HTable);
     HelperThreads.emplace_back(std::thread(
-        [St](Position Pos) { SearchThread(St).go<false>(Pos); }, RootPos));
+        [&](Position Pos) {
+        SearchThread(St).go<false>(Pos);
+        },
+        RootPos));
+  }
 }
 
 void pali::command::stop(std::atomic<bool> &Stopped) {
