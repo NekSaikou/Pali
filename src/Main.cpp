@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
   Options Opts;
   Position RootPos(STARTPOS);
   TTable TTable;
-  thread_local HTable HTable;
+  HTable HTable;
   std::atomic<bool> Stopped = true;
   std::string Input;
 
