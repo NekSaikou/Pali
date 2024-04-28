@@ -3,6 +3,7 @@
 #include "../core/Move.h"
 #include "../core/Piece.h"
 #include "../core/Position.h"
+#include "../core/Util.h"
 #include "MovePicker.h"
 #include "TTable.h"
 
@@ -155,7 +156,7 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
       Bound = Bound::Lower;
 
       if (!Mv.isCapture())
-        HTable.updateQuiet(Pos.stm(), Mv, Depth);
+        HTable.updateQuiet<Operation::Add>(Pos.stm(), Mv, Depth);
 
       break;
     }

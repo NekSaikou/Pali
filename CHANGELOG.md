@@ -1,1 +1,5 @@
-+ Null Move Pruning +41 elo 8+0.08
+| Change                      | Elo |
+|-----------------------------|-----|
+| Null Move Pruning           | +41 |
+| Butterfly History Heuristic | +23 |
+| History Gravity             | +51 |

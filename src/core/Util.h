@@ -12,6 +12,9 @@
 
 namespace pali {
 
+/// Add/subtract for template
+enum class Operation { Add, Sub };
+
 /// Stack-allocated vector with fixed capacity
 template <typename T, size_t CAP> class ArrayVec {
   std::array<T, CAP> Data;

@@ -70,9 +70,9 @@ repick:
 
 void MovePicker::scoreQuiet() {
   for (Move &Mv : QuietMl) {
-    /// Butterfly history heuristic:
+    /// MainHist history heuristic:
     /// Give moves that cause a lot of cutoff more score
-    Mv.Score += HTable.Butterfly[Pos.stm()][Mv.From][Mv.To];
+    Mv.Score += HTable.MainHist[Pos.stm()][Mv.From][Mv.To];
   }
 }
 

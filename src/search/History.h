@@ -5,25 +5,36 @@
 
 #include <algorithm>
 #include <array>
+#include <cstdlib>
 
 namespace pali {
 
+constexpr int MH_CAP = 8192;
+
 struct HTable {
-  std::array<std::array<std::array<int, 2>, 64>, 64> Butterfly{};
+  std::array<std::array<std::array<int, 2>, 64>, 64> MainHist{};
 
   /// Update heuristics related to quiet moves
-  void updateQuiet(Color Stm, Move Mv, int Depth) {
-    Butterfly[Stm][Mv.From][Mv.To] += Depth * Depth;
+  template <Operation OP> void updateQuiet(Color Stm, Move Mv, int Depth) {
+    int Bonus = OP == Operation::Add ? Depth * Depth : -(Depth * Depth);
+    int &MHScore = MainHist[Stm][Mv.From][Mv.To];
+
+    // History Gravity:
+    // Give less bonus as the score approaches cap
+    Bonus -= abs(Bonus) * MHScore / MH_CAP;
+
+    MHScore += Bonus;
   }
 
+  /// Decay history to use them in the next search
   void softReset() {
-    for (auto &ArrFrom : Butterfly)
+    for (auto &ArrFrom : MainHist)
       for (auto &ArrStm : ArrFrom)
         for (int &Val : ArrStm)
-          std::clamp(Val, 0, 0);
+          Val /= 2;
   }
 
-  void clear() { Butterfly = {}; }
+  void clear() { MainHist = {}; }
 };
 
 } // namespace pali
