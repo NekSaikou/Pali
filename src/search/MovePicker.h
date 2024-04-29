@@ -21,7 +21,7 @@ struct MovePicker {
   const Move BestMove;
   HTable &HTable;
 
-  MovePicker(int Ply, const Position &Pos, uint16_t PackedBM,
+  MovePicker(const Position &Pos, int Ply, uint16_t PackedBM,
              struct HTable &HTable)
       : Pos(Pos), Ply(Ply),
         BestMove(
