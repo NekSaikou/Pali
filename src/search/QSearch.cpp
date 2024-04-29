@@ -35,7 +35,7 @@ int SearchThread::qsearch(const Position &Pos, int Ply, int α, int β) {
   α = std::max(α, BestScore);
 
   Bound Bound = Bound::Upper;
-  MovePicker Mp(Pos, BestMove, HTable);
+  MovePicker Mp(Pos, Ply, BestMove, HTable);
   while (true) {
     Move Mv = Mp.nextMove<true>();
     Position PosCopy = Pos;

@@ -107,7 +107,7 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
 
   Bound Bound = Bound::Upper;
   int MovesMade = 0;
-  MovePicker Mp(Pos, BestMove, HTable);
+  MovePicker Mp(Pos, Ply, BestMove, HTable);
   while (true) {
     Move Mv = Mp.nextMove<false>();
 
@@ -156,7 +156,7 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
       Bound = Bound::Lower;
 
       if (!Mv.isCapture())
-        HTable.updateQuiet<Operation::Add>(Pos.stm(), Mv, Depth);
+        HTable.updateQuiet<Operation::Add>(Pos.stm(), Mv, Depth, Ply);
 
       break;
     }

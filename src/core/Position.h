@@ -55,6 +55,8 @@ public:
 
   [[nodiscard]] Color stm() const { return Stm; }
 
+  [[nodiscard]] uint8_t rights() const { return Rights; }
+
   [[nodiscard]] uint64_t hash() const { return Hash; }
 
   [[nodiscard]] int hmc() const { return Hmc; }

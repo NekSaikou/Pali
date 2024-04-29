@@ -17,18 +17,21 @@ struct MovePicker {
   MoveList QuietMl;
   MoveList NoisyMl;
   const Position &Pos;
+  const int Ply;
   const Move BestMove;
   HTable &HTable;
 
-  MovePicker(const Position &Pos, uint16_t PackedBM, struct HTable &HTable)
-      : Pos(Pos), BestMove(
-                      // Unpack best move
-                      [&Pos, PackedBM]() -> Move {
-                        auto [From, To, Flag] = Move::unpack(PackedBM);
-                        Piece Pc = Pos.pieceAt(From);
+  MovePicker(int Ply, const Position &Pos, uint16_t PackedBM,
+             struct HTable &HTable)
+      : Pos(Pos), Ply(Ply),
+        BestMove(
+            // Unpack best move
+            [&Pos, PackedBM]() -> Move {
+              auto [From, To, Flag] = Move::unpack(PackedBM);
+              Piece Pc = Pos.pieceAt(From);
 
-                        return {From, To, Flag, Pc};
-                      }()),
+              return {From, To, Flag, Pc};
+            }()),
         HTable(HTable) {}
 
   /// Go to the next move picker stage

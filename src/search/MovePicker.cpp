@@ -5,12 +5,15 @@
 #include "../core/Move.h"
 #include "../core/Piece.h"
 #include "../core/Position.h"
+#include "../core/Square.h"
 #include "History.h"
 
 #include <cstdint>
 #include <cstdlib>
 
 using namespace pali;
+
+constexpr int KILLER_SCORE = 2'000'000'000;
 
 Move pickMove(MoveList &Ml);
 bool isPsuedoLegal(const Position &Pos, Move Mv);
@@ -70,17 +73,20 @@ repick:
 
 void MovePicker::scoreQuiet() {
   for (Move &Mv : QuietMl) {
-    /// MainHist history heuristic:
-    /// Give moves that cause a lot of cutoff more score
+    // History Heuristic:
+    // Give moves that cause a lot of cutoff more score
     Mv.Score += HTable.MainHist[Pos.stm()][Mv.From][Mv.To];
+
+    if (Mv == HTable.Killer[Ply])
+      Mv.Score += KILLER_SCORE;
   }
 }
 
 void MovePicker::scoreNoisy() {
   for (Move &Mv : NoisyMl) {
-    /// MVV-LVA (Most Valuable Victim, Least Valuable Attacker)
-    /// Give higher score to captures that target more valuable enemy
-    /// pieces followed by captures by low value pieces
+    // MVV-LVA (Most Valuable Victim, Least Valuable Attacker)
+    // Give higher score to captures that target more valuable enemy
+    // pieces followed by captures by low value pieces
     Piece Target = Mv.isEP() ? Piece::Pawn : Pos.pieceAt(Mv.To);
     Mv.Score += Target.mvvVal() + Mv.Pc.lvaVal();
   }
