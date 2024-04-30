@@ -55,9 +55,10 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
   uint16_t BestMove = 0;
 
   // TT Probing
-  bool TTHit = false;
   auto Tte = TTable.probeEntry(Pos.hash());
-  if (Tte != nullptr) {
+  bool TTHit = Tte != nullptr;
+
+  if (TTHit) {
     Eval = Tte->Eval;
     BestMove = Tte->BestMove;
     TTHit = true;
