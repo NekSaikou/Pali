@@ -4,6 +4,7 @@
 #include "core/Zobrist.h"
 #include "nnue/Network.h"
 #include "search/History.h"
+#include "search/LogTable.h"
 #include "search/TTable.h"
 #include "uci/Commands.h"
 
@@ -21,6 +22,7 @@ using namespace pali;
 int main(int argc, char *argv[]) {
   initAttackTables();
   initZobrist();
+  initLogTable();
   initNNUE(argv[0]);
 
   std::cout << "Pali " << VERSION_NUMBER << " by Nek" << std::endl;
