@@ -61,7 +61,6 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
   if (TTHit) {
     Eval = Tte->Eval;
     BestMove = Tte->BestMove;
-    TTHit = true;
   }
 
   // TT cutoff
