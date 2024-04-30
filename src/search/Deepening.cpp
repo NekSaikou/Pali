@@ -81,6 +81,8 @@ template <bool MAIN> void SearchThread::go(Position &RootPos) {
       MoveList Ml;
       RootPos.genQuiet(Ml);
       BestMove = Ml[0];
+
+      return;
     }
 
     std::cout << "bestmove " << BestMove.uciStr() << std::endl;
