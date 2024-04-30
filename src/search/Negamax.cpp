@@ -84,14 +84,24 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
     Eval = Pos.evaluate();
 
   if (!IsPVNode && !IsInCheck) {
-    // Null move pruning:
+    bool isKPEndgame =
+        (Pos.getBB(Piece::Pawn) | Pos.getBB(Piece::King)) == Pos.allBB();
+    int NmpDepth = 3;
+
+    // Static NMP/Reverse Futility Pruning:
+    // If eval is a certain amount above β,
+    // prune out the node immediately
+    int RfpMargin = Depth * 80;
+    if (Eval >= β + RfpMargin)
+      return Eval;
+
+    // Null Move Pruning:
     // If our position is so good that we still beat β
     // even if we give our opponent a free move,
     // then this node is likely going to fail high.
     //
     // Doesn't work in king and pawn endgame due to zugzwang
-    if (Eval >= β && Depth >= 3 &&
-        (Pos.getBB(Piece::Pawn) | Pos.getBB(Piece::King)) != Pos.allBB()) {
+    if (Eval >= β && Depth >= NmpDepth && !isKPEndgame) {
       int R = 3 + Depth / 3 + std::min((Eval - β) / 200, 3);
 
       const_cast<Position &>(Pos).changeSide();
