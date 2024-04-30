@@ -75,6 +75,14 @@ template <bool MAIN> void SearchThread::go(Position &RootPos) {
   }
 
   if (MAIN) {
+    // If it's forced draw by 50 moves rule then 
+    // we might not have any move to play
+    if (BestMove.isNullMove()) {
+      MoveList Ml;
+      RootPos.genQuiet(Ml);
+      BestMove = Ml[0];
+    }
+
     std::cout << "bestmove " << BestMove.uciStr() << std::endl;
 
     TTable.ageUp();
