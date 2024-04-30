@@ -9,4 +9,4 @@ void initLogTable();
 
 double ln(int i);
 
-}
+} // namespace pali

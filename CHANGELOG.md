@@ -5,3 +5,4 @@
 | History Gravity             | +51  |
 | Killer Move                 | +12  |
 | Static NMP                  | +110 |
+| Late Move Reduction         | +152 |

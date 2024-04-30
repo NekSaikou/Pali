@@ -1,3 +1,4 @@
+#include "LogTable.h"
 #include "SearchThread.h"
 
 #include "../core/Move.h"
@@ -140,14 +141,31 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
 
     ++MovesMade;
 
+    // Late Move Reduction:
+    // Moves ordered later are probably worse
+    // so we perform search with reduced depth instead
+    int Reduction = 0;
+    // clang-format off
+    if (Depth >= 2 &&
+        Mp.Stage >= MovePicker::Quiet &&
+        Mv.Score < 2'000'000'000) {
+      Reduction = static_cast<int>(0.3 * ln(Depth) * ln(MovesMade) + 0.8);
+
+      Reduction -= IsPVNode;
+    }
+    // clang-format on
+
+    // Don't accidentally extend
+    Reduction = std::max(Reduction, 0);
+
     // Search the first move with full window
     int Score;
     if (MovesMade == 1)
-      Score = -negamax(PosCopy, Depth - 1, Ply + 1, -β, -α);
+      Score = -negamax(PosCopy, Depth - 1 - Reduction, Ply + 1, -β, -α);
 
     // Perform zero window search on the rest
     else {
-      int ZwsScore = -negamax(PosCopy, Depth - 1, Ply + 1, -α - 1, -α);
+      int ZwsScore = -negamax(PosCopy, Depth - 1 - Reduction, Ply + 1, -α - 1, -α);
 
       // If the move doesn't fail low, continue searching as PV node
       Score = ZwsScore > α && IsPVNode
