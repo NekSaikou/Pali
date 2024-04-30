@@ -50,18 +50,9 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
   if (Depth <= 0 || Ply >= MAX_PLY - 1)
     return qsearch(Pos, Ply + 1, α, β);
 
-  int Eval;
-  int BestScore = -INF_SCORE;
-  uint16_t BestMove = 0;
-
   // TT Probing
   auto Tte = TTable.probeEntry(Pos.hash());
   bool TTHit = Tte != nullptr;
-
-  if (TTHit) {
-    Eval = Tte->Eval;
-    BestMove = Tte->BestMove;
-  }
 
   // TT cutoff
   if (TTHit && !IsPVNode && Depth <= Tte->Depth) {
@@ -81,8 +72,9 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
     }
   }
 
-  if (!TTHit)
-    Eval = Pos.evaluate();
+  int Eval = TTHit ? Tte->Eval : Pos.evaluate();
+  int BestScore = -INF_SCORE;
+  uint16_t BestMove = TTHit ? Tte->BestMove : 0;
 
   if (!IsPVNode && !IsInCheck) {
     bool isKPEndgame =
