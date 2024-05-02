@@ -111,7 +111,7 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
   // Internal Iterative Reduction:
   // If we don't have TT move then the search will likely
   // take a long time, so we perform a reduced search then come back later
-  if (Depth >= 3 && (!TTHit || Tte->BestMove == 0) && IsPVNode)
+  if (Depth >= 3 && BestMove == 0 && IsPVNode)
     --Depth;
 
   Bound Bound = Bound::Upper;
