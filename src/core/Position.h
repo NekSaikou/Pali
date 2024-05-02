@@ -110,8 +110,8 @@ public:
     if (Hmc >= 100)
       return true;
 
-    for (int i = OccuredPos.size() - 2;  i >= 0; i -= 2) {
-      if (i < OccuredPos.size() - Hmc)
+    for (int i = static_cast<int>(OccuredPos.size()) - 2;  i >= 0; i -= 2) {
+      if (i + Hmc < OccuredPos.size())
         return false;
 
       if (OccuredPos[i] == Hash)

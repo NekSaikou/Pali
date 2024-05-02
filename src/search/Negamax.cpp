@@ -26,15 +26,15 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
   if (Stopped)
     return 0;
 
-  if (Pos.isDraw())
-    return 0;
-
   const bool IsRootNode = Ply == 0;
 
   // Node has full window
   const bool IsPVNode = β - α > 1;
 
   const bool IsInCheck = Pos.isInCheck();
+
+  if (!IsRootNode && Pos.isDraw())
+    return 0;
 
   PVTable.Length[Ply] = Ply;
 
