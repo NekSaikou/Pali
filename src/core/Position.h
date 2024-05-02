@@ -110,17 +110,15 @@ public:
     if (Hmc >= 100)
       return true;
 
-    int Repeat = 1;
-
     for (int i = OccuredPos.size() - 2;  i >= 0; i -= 2) {
       if (i < OccuredPos.size() - Hmc)
         return false;
 
       if (OccuredPos[i] == Hash)
-        ++Repeat;
+        return true;
     }
 
-    return Repeat >= 3;
+    return false;
   }
 
 private:
