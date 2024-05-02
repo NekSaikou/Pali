@@ -108,6 +108,12 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
     }
   }
 
+  // Internal Iterative Reduction:
+  // If we don't have TT move then the search will likely
+  // take a long time, so we perform a reduced search then come back later
+  if (Depth >= 3 && (!TTHit || Tte->BestMove == 0) && IsPVNode)
+    --Depth;
+
   Bound Bound = Bound::Upper;
   int MovesMade = 0;
   MovePicker Mp(Pos, Ply, BestMove, HTable);
@@ -157,7 +163,8 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
 
     // Perform zero window search on the rest
     else {
-      int ZwsScore = -negamax(PosCopy, Depth - 1 - Reduction, Ply + 1, -α - 1, -α);
+      int ZwsScore =
+          -negamax(PosCopy, Depth - 1 - Reduction, Ply + 1, -α - 1, -α);
 
       // If the move doesn't fail low, continue searching as PV node
       Score = ZwsScore > α && IsPVNode
