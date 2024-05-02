@@ -29,10 +29,12 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
   if (Pos.isDraw())
     return 0;
 
-  // Node has full window
-  bool IsPVNode = β - α > 1;
+  const bool IsRootNode = Ply == 0;
 
-  bool IsInCheck = Pos.isInCheck();
+  // Node has full window
+  const bool IsPVNode = β - α > 1;
+
+  const bool IsInCheck = Pos.isInCheck();
 
   PVTable.Length[Ply] = Ply;
 
@@ -125,7 +127,7 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
       break;
 
     // Duplicate PV line
-    if (Ply == 0 && isSearched(Mv))
+    if (IsRootNode && isSearched(Mv))
       continue;
 
     Position PosCopy = Pos;
