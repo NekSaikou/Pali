@@ -7,3 +7,4 @@
 | Static NMP                   | +110 |
 | Late Move Reduction          | +152 |
 | Internal Iterative Reduction | +16  |
+| Aspiration Window            | +82  |

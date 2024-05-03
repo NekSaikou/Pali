@@ -3,6 +3,7 @@
 #include "../core/Move.h"
 #include "../core/Position.h"
 
+#include <algorithm>
 #include <cstdint>
 #include <iostream>
 
@@ -22,7 +23,8 @@ template <bool MAIN> void SearchThread::go(Position &RootPos) {
   for (int Depth = 1; Depth <= DepthLim; ++Depth) {
     SearchedPV.clear();
     for (int Pv = 1; Pv <= MultiPV; ++Pv) {
-      BestScore = negamax(RootPos, Depth, 0, -INF_SCORE, INF_SCORE);
+      BestScore = Depth > 5 ? aspirationSearch(RootPos, Depth, BestScore)
+                            : negamax(RootPos, Depth, 0, -INF_SCORE, INF_SCORE);
 
       if (Stopped)
         break;
@@ -91,4 +93,42 @@ template <bool MAIN> void SearchThread::go(Position &RootPos) {
   }
 
   abort();
+}
+
+int SearchThread::aspirationSearch(const Position &RootPos, int Depth, int Score) {
+  int δ = 15;
+
+  int α = std::max(Score - δ, -INF_SCORE);
+  int β = std::min(Score + δ, INF_SCORE);
+
+  int FailHighStreak = 0;
+
+  while (true) {
+    int AdjustedDepth = Depth - FailHighStreak;
+    Score = negamax(RootPos, AdjustedDepth, 0, α, β);
+
+    if (Stopped)
+      return 0;
+
+    if (Score <= α) {
+      // If we fail low, it's unlikely to fail high even with lowered β
+      // so we can adjust it closer to α before doing research
+      β = (α + β) / 2;
+
+      α = std::max(α - δ, -INF_SCORE);
+
+      FailHighStreak = 0;
+    }
+
+    else if (Score >= β) {
+      β = std::min(Score + δ, INF_SCORE);
+
+      ++FailHighStreak;
+    }
+
+    else
+      return Score;
+
+    δ *= 2;
+  }
 }
