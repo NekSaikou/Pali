@@ -19,7 +19,8 @@ struct HTable {
   /// Update heuristics related to quiet moves
   template <Operation OP>
   void updateQuiet(Color Stm, Move Mv, int Depth, int Ply) {
-    int Bonus = OP == Operation::Add ? Depth * Depth : -(Depth * Depth);
+    int BonusNum = Depth * Depth;
+    int Bonus = OP == Operation::Add ? BonusNum : -BonusNum;
     int &MHScore = MainHist[Stm][Mv.From][Mv.To];
 
     // History Gravity:
