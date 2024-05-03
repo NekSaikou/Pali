@@ -33,10 +33,10 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
 
   const bool IsInCheck = Pos.isInCheck();
 
+  PVTable.Length[Ply] = Ply;
+
   if (!IsRootNode && Pos.isDraw())
     return 0;
-
-  PVTable.Length[Ply] = Ply;
 
   // Mate distance pruning
   α = std::max(α, -MATE_SCORE + Ply);
