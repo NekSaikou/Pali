@@ -15,13 +15,9 @@ uint64_t EP_KEYS[64];
 uint64_t CASTLE_KEYS[16];
 uint64_t STM_KEY;
 
-uint64_t pali::getPieceKey(Piece Pc, Square Sq) {
-  return PIECE_KEYS[Pc][Sq];
-}
+uint64_t pali::getPieceKey(Piece Pc, Square Sq) { return PIECE_KEYS[Pc][Sq]; }
 
-uint64_t pali::getColorKey(Color Col, Square Sq) {
-  return COLOR_KEYS[Col][Sq];
-}
+uint64_t pali::getColorKey(Color Col, Square Sq) { return COLOR_KEYS[Col][Sq]; }
 
 uint64_t pali::getEPKey(Square Sq) { return EP_KEYS[Sq]; }
 

@@ -26,23 +26,15 @@ public:
   }
 
   /// Piece value for MVV-LVA
-  [[nodiscard]] int32_t lvaVal() const {
-    return 6 - Data;
-  }
+  [[nodiscard]] int32_t lvaVal() const { return 6 - Data; }
 
   /// Piece value for MVV-LVA
-  [[nodiscard]] int32_t mvvVal() const {
-    return Data * 100000;
-  }
+  [[nodiscard]] int32_t mvvVal() const { return Data * 100000; }
 
   [[nodiscard]] char const *str() const {
     constexpr char const *PIECE_SYMBOL[7]{"p", "n", "b", "r", "q", "k"};
     return PIECE_SYMBOL[Data];
   }
-};
-
-class Pawn : public Piece {
-
 };
 
 } // namespace pali

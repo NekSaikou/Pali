@@ -439,8 +439,10 @@ int Position::evaluate() const {
   int32_t Output = 0; // Need to be 32 bits to avoid overflow
 
   for (int i = 0; i < HIDDEN_SIZE; i++) {
-      Output += screlu(Us[i])   * static_cast<int32_t>(NNUE.OutputWeights[0].Data[i]);
-      Output += screlu(Them[i]) * static_cast<int32_t>(NNUE.OutputWeights[1].Data[i]);
+    Output +=
+        screlu(Us[i]) * static_cast<int32_t>(NNUE.OutputWeights[0].Data[i]);
+    Output +=
+        screlu(Them[i]) * static_cast<int32_t>(NNUE.OutputWeights[1].Data[i]);
   }
 
   Output /= QA;

@@ -68,7 +68,7 @@ public:
   [[nodiscard]] bool isInCheck() const {
     return attacksAt(getBB(Piece::King, Stm).lsb()) & getBB(Stm.inverse());
   }
-  
+
   /// What piece is on the given square
   [[nodiscard]] Piece pieceAt(Square Sq) const {
     for (int Pc = Piece::Pawn; Pc <= Piece::King; ++Pc) {
@@ -78,7 +78,6 @@ public:
 
     return Piece::None;
   }
-
 
   /// Add noisy psuedolegal moves to move list
   void genNoisy(MoveList &Ml) const;
@@ -110,13 +109,10 @@ public:
     if (Hmc >= 100)
       return true;
 
-    for (int i = static_cast<int>(OccuredPos.size()) - 2;  i >= 0; i -= 2) {
-      if (i + Hmc < OccuredPos.size())
-        return false;
-
+    for (int i = static_cast<int>(OccuredPos.size()) - 2;
+         i >= static_cast<int>(OccuredPos.size()) - Hmc; i -= 2)
       if (OccuredPos[i] == Hash)
         return true;
-    }
 
     return false;
   }
@@ -128,20 +124,20 @@ private:
     const auto [WhiteIx, BlackIx] = nnueIdx(Col, Pc, Sq);
     const auto &WhiteAdd = NNUE.InputWeights[WhiteIx].Data;
     const auto &BlackAdd = NNUE.InputWeights[BlackIx].Data;
-      for (int i = 0; i < HIDDEN_SIZE; i++) {
-          Acc[0].Data[i] += WhiteAdd[i];
-          Acc[1].Data[i] += BlackAdd[i];
-      }
+    for (int i = 0; i < HIDDEN_SIZE; i++) {
+      Acc[0].Data[i] += WhiteAdd[i];
+      Acc[1].Data[i] += BlackAdd[i];
+    }
   }
 
   void nnueSub(Piece Pc, Color Col, Square Sq) {
     const auto [WhiteIx, BlackIx] = nnueIdx(Col, Pc, Sq);
     const auto &WhiteSub = NNUE.InputWeights[WhiteIx].Data;
     const auto &BlackSub = NNUE.InputWeights[BlackIx].Data;
-      for (int i = 0; i < HIDDEN_SIZE; i++) {
-          Acc[0].Data[i] -= WhiteSub[i];
-          Acc[1].Data[i] -= BlackSub[i];
-      }
+    for (int i = 0; i < HIDDEN_SIZE; i++) {
+      Acc[0].Data[i] -= WhiteSub[i];
+      Acc[1].Data[i] -= BlackSub[i];
+    }
   }
 
   void addPiece(Piece Pc, Color Col, Square Sq) {

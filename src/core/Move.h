@@ -91,12 +91,10 @@ struct Move {
   }
 
   /// Check if the move is null
-  [[nodiscard]] bool isNullMove() const {
-    return From == To;
-  }
+  [[nodiscard]] bool isNullMove() const { return From == To; }
 };
 
-constexpr Move NULL_MOVE(0, 0, MFlag::Normal , Piece::Pawn);
+constexpr Move NULL_MOVE(0, 0, MFlag::Normal, Piece::Pawn);
 
 using MoveList = ArrayVec<Move, MAX_MOVE>;
 
