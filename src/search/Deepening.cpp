@@ -95,7 +95,8 @@ template <bool MAIN> void SearchThread::go(Position &RootPos) {
   abort();
 }
 
-int SearchThread::aspirationSearch(const Position &RootPos, int Depth, int Score) {
+int SearchThread::aspirationSearch(const Position &RootPos, int Depth,
+                                   int Score) {
   int δ = 15;
 
   int α = std::max(Score - δ, -INF_SCORE);

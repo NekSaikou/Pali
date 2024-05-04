@@ -72,7 +72,8 @@ struct SearchThread {
 private:
   /// Aspiration window:
   /// Search with decreased α-β window
-  [[nodiscard]] int aspirationSearch(const Position &RootPos, int Depth, int Score);
+  [[nodiscard]] int aspirationSearch(const Position &RootPos, int Depth,
+                                     int Score);
 
   /// Main search function
   [[nodiscard]] int negamax(const Position &Pos, int Depth, int Ply, int α,
