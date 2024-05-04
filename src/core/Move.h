@@ -56,6 +56,23 @@ struct Move {
 
   [[nodiscard]] bool isCastle() const { return Flag == MFlag::Castle; }
 
+  [[nodiscard]] uint8_t castleType() const {
+    uint8_t Castle = 0;
+
+    switch (To) {
+      case Square::G1:
+        Castle = 1;
+      case Square::C1:
+        Castle = 2;
+      case Square::G8:
+        Castle = 4;
+      case Square::C8:
+        Castle = 8;
+    }
+
+    return Castle;
+  }
+
   [[nodiscard]] bool isCapture() const { return std::to_underlying(Flag) & 4; }
 
   [[nodiscard]] bool isPromo() const { return std::to_underlying(Flag) & 8; }
