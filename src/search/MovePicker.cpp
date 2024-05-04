@@ -2,14 +2,15 @@
 
 #include "../core/Attacks.h"
 #include "../core/Bitboard.h"
+#include "../core/Color.h"
 #include "../core/Move.h"
 #include "../core/Piece.h"
 #include "../core/Position.h"
 #include "../core/Square.h"
 #include "History.h"
 
+#include <cassert>
 #include <cstdint>
-#include <cstdlib>
 
 using namespace pali;
 
@@ -114,70 +115,100 @@ Move pickMove(MoveList &Ml) {
 /// Check if move from TT is at least pseudolegal
 bool isPsuedoLegal(const Position &Pos, Move Mv) {
   [[maybe_unused]] const auto [From, To, Flag, Pc, Score] = Mv;
-  const Bitboard ValidSquares = ~Pos.getBB(Pos.stm()); // Not own piece
 
-  // Move is obviosly illegal
+  Color Stm = Pos.stm();
+
+  Bitboard Occ = Pos.allBB();
+  Bitboard Us = Pos.getBB(Stm);
+  Bitboard Them = Pos.getBB(Stm.inverse());
+
   if (Mv.isNullMove() || Pc == Piece::None)
     return false;
 
-  // Simple cases:
-  // We only need to check if the piece actually land on a valid square
-  if (Flag == MFlag::Normal || Flag == MFlag::Capture)
-    switch (Pc) {
-    case Piece::Knight:
-      return ValidSquares & getKnightAttack(From).getBit(To);
+  if (Us.getBit(To))
+    return false;
 
-    case Piece::Bishop:
-      return ValidSquares & getBishopAttack(From, Pos.allBB()).getBit(To);
+  if (!Us.getBit(From))
+    return false;
 
-    case Piece::Rook:
-      return ValidSquares & getRookAttack(From, Pos.allBB()).getBit(To);
+  if (Flag == MFlag::Normal || Flag == MFlag::Capture) {
+    if (Pc == Piece::Knight)
+      return getKnightAttack(From).getBit(To);
 
-    case Piece::Queen:
-      return ValidSquares & getQueenAttack(From, Pos.allBB()).getBit(To);
+    if (Pc == Piece::Bishop)
+      return getBishopAttack(From, Occ).getBit(To);
 
-    case Piece::King:
-      return ValidSquares & getKingAttack(From).getBit(To);
-    }
+    if (Pc == Piece::Rook)
+      return getRookAttack(From, Occ).getBit(To);
 
-  // Castling:
-  // The moving piece must be a king and must be moving 2 squares
-  if (Flag == MFlag::Castle)
-    return Pc == Piece::King && abs(From - To) == 2;
+    if (Pc == Piece::Queen)
+      return getQueenAttack(From, Occ).getBit(To);
 
-  // clang-format off
-  if (Pc == Piece::Pawn) {
-    Bitboard PromoRank = Pos.stm().isWhite() ? Bitboard::RANK_7
-                                             : Bitboard::RANK_2;
-
-    Bitboard ThirdRank = Pos.stm().isWhite() ? Bitboard::RANK_3
-                                             : Bitboard::RANK_6;
-
-    Bitboard ValidPushes =
-        ValidSquares & (Pos.stm().isWhite() ? Pos.getBB(Piece::Pawn) >> 8
-                                            : Pos.getBB(Piece::Pawn) << 8);
-
-    Bitboard ValidDPs =
-        ValidSquares & (Pos.stm().isWhite() ? (ValidPushes & ThirdRank) >> 8
-                                            : (ValidPushes & ThirdRank) << 8);
-
-    // Invalid promotions
-    if (Mv.isPromo() && !PromoRank.getBit(From))
-      return false;
-      
-    // Double pushes
-    if (Flag == MFlag::DoublePush)
-      return ValidDPs.getBit(To);
-
-    // All capture moves
-    else if (Mv.isCapture())
-      return ValidSquares & getPawnAttack(From, Pos.stm()).getBit(To);
-
-    // Normal pushes and non-captures promotion
-    else
-      return ValidPushes.getBit(To);
+    if (Pc == Piece::King)
+      return getKingAttack(From).getBit(To);
   }
-  // clang-format on
 
-  return true;
+  if (Pc == Piece::Pawn) {
+    Bitboard PromoRank = Stm.isWhite() ? Bitboard::RANK_7 : Bitboard::RANK_2;
+    Bitboard ThirdRank = Stm.isWhite() ? Bitboard::RANK_3 : Bitboard::RANK_6;
+
+    if (Mv.isPromo())
+      if (!PromoRank.getBit(From))
+        return false;
+
+    if (Mv.isEP())
+      return getPawnAttack(From, Stm).getBit(Pos.epSq());
+
+    if (Mv.isCapture())
+      return getPawnAttack(From, Stm).getBit(To);
+
+    Bitboard ValidPush =
+        (Stm.isWhite() ? From.toBB() >> 8 : From.toBB() << 8) & ~Occ;
+
+    if (Mv.isDP())
+      return Stm.isWhite() ? (ValidPush & ThirdRank) >> 8 & ~Occ
+                           : (ValidPush & ThirdRank) << 8 & ~Occ;
+
+    return ValidPush;
+  }
+
+  assert(Pc == Piece::King);
+
+  uint8_t Castle = 0;
+  Square RookFrom = 11;
+
+  if (To == Square::G1) {
+    Castle = 1;
+    RookFrom = Square::H1;
+  }
+
+  else if (To == Square::C1) {
+    Castle = 2;
+    RookFrom = Square::A1;
+  }
+
+  else if (To == Square::G8) {
+    Castle = 4;
+    RookFrom = Square::H8;
+  }
+
+  else if (To == Square::C8) {
+    Castle = 8;
+    RookFrom = Square::A8;
+  }
+
+  if (Mv.isCastle()) {
+    Bitboard Path = getBetweenSq(From, RookFrom);
+    return (Pos.rights() & Castle && !(Occ & Path) && !Pos.isInCheck() &&
+            [&]() {
+              Bitboard KingPath = getBetweenSq(From, To);
+              while (KingPath)
+                if (Pos.attacksAt(KingPath.takeLsb()) & Them)
+                  return false;
+
+              return true;
+            }());
+  };
+
+  return false;
 }

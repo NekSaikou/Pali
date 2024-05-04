@@ -60,14 +60,18 @@ struct Move {
     uint8_t Castle = 0;
 
     switch (To) {
-      case Square::G1:
-        Castle = 1;
-      case Square::C1:
-        Castle = 2;
-      case Square::G8:
-        Castle = 4;
-      case Square::C8:
-        Castle = 8;
+    case Square::G1:
+      Castle = 1;
+      break;
+    case Square::C1:
+      Castle = 2;
+      break;
+    case Square::G8:
+      Castle = 4;
+      break;
+    case Square::C8:
+      Castle = 8;
+      break;
     }
 
     return Castle;
