@@ -111,10 +111,13 @@ public:
     if (Hmc >= 100)
       return true;
 
-    for (int i = static_cast<int>(OccuredPos.size()) - 2;
-         i >= static_cast<int>(OccuredPos.size()) - Hmc; i -= 2)
+    for (int i = static_cast<int>(OccuredPos.size()) - 2; i >= 0; i -= 2) {
+      if (i + Hmc < OccuredPos.size())
+        return false;
+  
       if (OccuredPos[i] == Hash)
         return true;
+    }
 
     return false;
   }
