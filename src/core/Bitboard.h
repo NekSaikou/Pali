@@ -49,6 +49,8 @@ public:
 
   void operator*=(Bitboard Rhs) { Data *= Rhs; }
 
+  [[nodiscard]] Bitboard operator-() const { return -Data; }
+
   [[nodiscard]] operator uint64_t() const { return Data; }
 
   /// Return the least significant bit of bitboard
