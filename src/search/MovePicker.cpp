@@ -61,8 +61,10 @@ repick:
       goNext();
     }
 
-    else
-      Stage = BadNoisy;
+    else {
+      Stage = Finished;
+      return NULL_MOVE;
+    }
 
   case Quiet:
     if (QuietMl.size() > 0) {
