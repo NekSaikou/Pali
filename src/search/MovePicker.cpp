@@ -8,6 +8,7 @@
 #include "../core/Position.h"
 #include "../core/Square.h"
 #include "History.h"
+#include "SEE.h"
 
 #include <cassert>
 #include <cstdint>
@@ -22,7 +23,7 @@ bool isPsuedoLegal(const Position &Pos, Move Mv);
 template Move MovePicker::nextMove<false>();
 template Move MovePicker::nextMove<true>();
 
-template <bool NO_QUIET> Move MovePicker::nextMove() {
+template <bool QSEARCH> Move MovePicker::nextMove() {
 repick:
   switch (Stage) {
   case Best:
@@ -37,9 +38,35 @@ repick:
 
     goNext();
 
-  case Noisy:
+  case GoodNoisy:
     if (NoisyMl.size() > 0) {
       Move Mv = pickMove(NoisyMl);
+      if (Mv == BestMove)
+        goto repick;
+
+      if (!see(Pos, Mv, 0)) {
+        BadNoisyMl.push_back(Mv);
+        goto repick;
+      }
+
+      return Mv;
+    }
+
+    goNext();
+
+  case GenQuiet:
+    if constexpr (!QSEARCH) {
+      Pos.genQuiet(QuietMl);
+      scoreQuiet();
+      goNext();
+    }
+
+    else
+      Stage = BadNoisy;
+
+  case Quiet:
+    if (QuietMl.size() > 0) {
+      Move Mv = pickMove(QuietMl);
       if (Mv == BestMove)
         goto repick;
 
@@ -48,17 +75,9 @@ repick:
 
     goNext();
 
-  case GenQuiet:
-    if constexpr (!NO_QUIET) {
-      Pos.genQuiet(QuietMl);
-      scoreQuiet();
-    }
-
-    goNext();
-
-  case Quiet:
-    if (QuietMl.size() > 0) {
-      Move Mv = pickMove(QuietMl);
+  case BadNoisy:
+    if (BadNoisyMl.size() > 0) {
+      Move Mv = pickMove(BadNoisyMl);
       if (Mv == BestMove)
         goto repick;
 
@@ -157,7 +176,8 @@ bool isPsuedoLegal(const Position &Pos, Move Mv) {
         return false;
 
     if (Mv.isEP())
-      return getPawnAttack(From, Stm).getBit(Pos.epSq());
+      return Pos.epSq() != Square::None &&
+             getPawnAttack(From, Stm).getBit(Pos.epSq());
 
     if (Mv.isCapture())
       return getPawnAttack(From, Stm).getBit(To);

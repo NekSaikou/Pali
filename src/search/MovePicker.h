@@ -12,10 +12,11 @@ namespace pali {
 
 /// Manage move generation and ordering
 struct MovePicker {
-  enum Stage { Best, GenŅoisy, Noisy, GenQuiet, Quiet, Finished };
+  enum Stage { Best, GenŅoisy, GoodNoisy, GenQuiet, Quiet, BadNoisy, Finished };
   Stage Stage = Best;
   MoveList QuietMl;
   MoveList NoisyMl;
+  MoveList BadNoisyMl;
   const Position &Pos;
   const int Ply;
   const Move BestMove;
@@ -38,7 +39,7 @@ struct MovePicker {
   void goNext() { Stage = static_cast<enum Stage>(Stage + 1); }
 
   /// Get the next best move
-  template <bool NO_QUIET> [[nodiscard]] Move nextMove();
+  template <bool QSEARCH> [[nodiscard]] Move nextMove();
 
 private:
   void scoreNoisy();

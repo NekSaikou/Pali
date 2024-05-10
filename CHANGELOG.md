@@ -8,3 +8,4 @@
 | Late Move Reduction          | +152 |
 | Internal Iterative Reduction | +16  |
 | Aspiration Window            | +82  |
+| SEE Ordering                 | +29  |

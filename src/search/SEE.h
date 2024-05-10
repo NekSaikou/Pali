@@ -8,12 +8,12 @@
 
 namespace pali {
 
-constexpr int16_t SEE_VAL[6]{100, 300, 300, 450, 850, 0};
+constexpr int SEE_VAL[6]{100, 300, 300, 450, 850, 0};
 
 /// Static Exchange Evaluation:
 /// Evaluate exchange result without actually making any move
-inline bool see(Position &Pos, Move Mv, int Threshold) {
-  if (Mv.isCastle() || Mv.isPromo())
+inline bool see(const Position &Pos, Move Mv, int Threshold) {
+  if (Mv.isCastle() || Mv.isPromo() || Mv.isEP())
     return true;
 
   Square Sq = Mv.To;
@@ -22,10 +22,10 @@ inline bool see(Position &Pos, Move Mv, int Threshold) {
   int TargetValue = Target == Piece::None ? 0 : SEE_VAL[Target];
 
   // Assumes we lose the moved piece in the exchange
-  int ExchangeScore = TargetValue - SEE_VAL[AttackingPiece] - Threshold;
+  int Score = TargetValue - SEE_VAL[Mv.Pc] - Threshold;
 
   // If the exchange beats the threshold anyway then it will always pass
-  if (ExchangeScore >= 0)
+  if (Score >= 0)
     return true;
 
   // Since we already moved the first piece, we must remove it from the board
@@ -33,51 +33,56 @@ inline bool see(Position &Pos, Move Mv, int Threshold) {
 
   Bitboard Attackers = Pos.attacksAt(Sq, Occ);
 
-  // Sliders
+  // Might have new lines of attack open up during the exchange
   Bitboard Bishops = Pos.getBB(Piece::Bishop) | Pos.getBB(Piece::Queen);
   Bitboard Rooks = Pos.getBB(Piece::Rook) | Pos.getBB(Piece::Queen);
 
-  // We already moved our piece, so we start from the opponent's turn
   Color SideToFail = Pos.stm().inverse();
 
   // Make capture until either side run out of piece or fail the threshold
-  do {
-    Attackers &= Occ; // Remove used pieces
+  while (true) {
+    // Remove used pieces
+    Attackers &= Occ;
 
     // The attacking side runs out of piece
     Bitboard Us = Attackers & Pos.getBB(SideToFail);
     if (Us == 0)
-      return SideToFail != Pos.stm();
+      break;
 
     // Pick the least valuable piece for the next move
-    for (int Pc = Piece::Pawn; Pc <= Piece::King; Pc++) {
-      if (Pos.getBB(static_cast<Piece::Type>(Pc)) & Us) {
+    for (int Pc = Piece::Pawn; Pc <= Piece::King; ++Pc) {
+      Bitboard AttackerBB = Pos.getBB(static_cast<Piece::Type>(Pc)) & Us;
+      if (AttackerBB) {
         AttackingPiece = static_cast<Piece::Type>(Pc);
-        Occ ^=
-            Square((Us & Pos.getBB(AttackingPiece, SideToFail)).lsb()).toBB();
+
+        Occ &= ~(AttackerBB & -AttackerBB);
+
         break;
       }
     }
 
-    // Check if new line of attacks opens up
+    // —1 to correct off by one error from < vs <=
+    Score = -Score - 1 - SEE_VAL[AttackingPiece];
+
+    SideToFail = SideToFail.inverse();
+
+    if (Score >= 0) {
+      // If the move fails the threshold but leaves the opposing king
+      // in check then the failing side is the opponent
+      if (AttackingPiece == Piece::King && Attackers & Pos.getBB(SideToFail))
+        SideToFail = SideToFail.inverse();
+
+      break;
+    }
+
+    // Check if there is another attacker behind
     if (AttackingPiece == Piece::Pawn || AttackingPiece == Piece::Bishop ||
         AttackingPiece == Piece::Queen)
       Attackers |= getBishopAttack(Sq, Occ) & Bishops;
 
     if (AttackingPiece == Piece::Rook || AttackingPiece == Piece::Queen)
       Attackers |= getRookAttack(Sq, Occ) & Rooks;
-
-    // —1 to correct off by one error from < vs <=
-    ExchangeScore = -ExchangeScore - 1 - SEE_VAL[AttackingPiece];
-
-    // Switch side then run the next iteration
-    SideToFail = SideToFail.inverse();
-  } while (ExchangeScore <= 0);
-
-  // If the move fails the threshold but results leaves opponent king
-  // in check, the failing side is the opponent
-  if (AttackingPiece == Piece::King && Attackers & Pos.getBB(SideToFail))
-    SideToFail = SideToFail.inverse();
+  }
 
   return SideToFail != Pos.stm();
 }
