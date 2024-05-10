@@ -9,3 +9,4 @@
 | Internal Iterative Reduction | +16  |
 | Aspiration Window            | +82  |
 | SEE Ordering                 | +29  |
+| QS SEE Pruning               | +30  |
