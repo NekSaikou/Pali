@@ -18,7 +18,7 @@ struct TTEntry {
   uint8_t Other = 0;
   uint8_t Depth = 0;
 
-  TTEntry(){};
+  TTEntry() {};
 
   TTEntry(uint64_t Hash, uint16_t BestMove, int16_t Score, int16_t Eval,
           Bound Bound, uint8_t Age, uint8_t Depth)
