@@ -1,4 +1,5 @@
 #include "LogTable.h"
+#include "SEE.h"
 #include "SearchThread.h"
 
 #include "../core/Move.h"
@@ -131,6 +132,12 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
 
     // Skip illegal moves
     if (!PosCopy.makeMove(Mv))
+      continue;
+
+    // SEE pruning:
+    // Skip the move if its SEE score is below a certain threshold
+    int Threshold = Mv.isCapture() ? -25 * Depth * Depth : -60 * Depth;
+    if (!see(Pos, Mv, Threshold))
       continue;
 
     // Prefetch TT if the move is legal

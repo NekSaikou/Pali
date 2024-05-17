@@ -10,3 +10,4 @@
 | Aspiration Window            | +82  |
 | SEE Ordering                 | +29  |
 | QS SEE Pruning               | +30  |
+| PVS SEE Pruning              | +20  |
