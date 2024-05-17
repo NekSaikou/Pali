@@ -12,7 +12,7 @@ namespace pali {
 constexpr int MH_CAP = 8192;
 
 struct HTable {
-  std::array<std::array<std::array<int, 2>, 64>, 64> MainHist{};
+  std::array<std::array<std::array<int, 64>, 64>, 2> MainHist{};
 
   std::array<Move, 128> Killer;
 
