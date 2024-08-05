@@ -1,4 +1,4 @@
-#include "LogTable.h"
+#include "search/LogTable.h"
 
 #include <array>
 #include <cmath>

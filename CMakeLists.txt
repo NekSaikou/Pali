@@ -8,8 +8,10 @@ project(
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+set(CMAKE_EXPORT_COMPILE_COMMANDS on)
 
 file(GLOB_RECURSE SRC_FILES src/*)
+include_directories(${CMAKE_SOURCE_DIR}/src)
 
 add_compile_definitions(
   RELEASE_BUILD
@@ -30,3 +32,5 @@ add_link_options(
   )
 
 add_executable(Pali ${SRC_FILES})
+
+target_link_libraries(Pali)

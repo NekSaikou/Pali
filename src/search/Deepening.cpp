@@ -1,7 +1,7 @@
-#include "SearchThread.h"
+#include "search/SearchThread.h"
 
-#include "../core/Move.h"
-#include "../core/Position.h"
+#include "core/Move.h"
+#include "core/Position.h"
 
 #include <algorithm>
 #include <cstdint>

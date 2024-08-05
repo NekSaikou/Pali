@@ -1,14 +1,14 @@
 #include "MovePicker.h"
 
-#include "../core/Attacks.h"
-#include "../core/Bitboard.h"
-#include "../core/Color.h"
-#include "../core/Move.h"
-#include "../core/Piece.h"
-#include "../core/Position.h"
-#include "../core/Square.h"
-#include "History.h"
-#include "SEE.h"
+#include "core/Attacks.h"
+#include "core/Bitboard.h"
+#include "core/Color.h"
+#include "core/Move.h"
+#include "core/Piece.h"
+#include "core/Position.h"
+#include "core/Square.h"
+#include "search/History.h"
+#include "search/SEE.h"
 
 #include <cassert>
 #include <cstdint>

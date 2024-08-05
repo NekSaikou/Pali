@@ -13,9 +13,9 @@ private:
   Type Data;
 
 public:
-  constexpr Piece() : Data(None){};
+  constexpr Piece() : Data(None) {};
 
-  constexpr Piece(Piece::Type Pc) : Data(Pc){};
+  constexpr Piece(Piece::Type Pc) : Data(Pc) {};
 
   [[nodiscard]] operator int() const { return Data; }
 

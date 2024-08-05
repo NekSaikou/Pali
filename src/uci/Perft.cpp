@@ -1,8 +1,8 @@
 #include "Perft.h"
 
-#include "../core/Move.h"
-#include "../core/Position.h"
-#include "../core/Util.h"
+#include "core/Move.h"
+#include "core/Position.h"
+#include "core/Util.h"
 
 #include <algorithm>
 #include <atomic>

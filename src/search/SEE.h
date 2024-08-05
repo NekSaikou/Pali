@@ -1,10 +1,12 @@
 #pragma once
 
-#include "../core/Attacks.h"
-#include "../core/Move.h"
-#include "../core/Position.h"
-
-#include <cstdint>
+#include "core/Attacks.h"
+#include "core/Bitboard.h"
+#include "core/Color.h"
+#include "core/Move.h"
+#include "core/Piece.h"
+#include "core/Position.h"
+#include "core/Square.h"
 
 namespace pali {
 

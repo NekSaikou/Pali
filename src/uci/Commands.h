@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../core/Position.h"
-#include "../search/History.h"
-#include "../search/TTable.h"
+#include "core/Position.h"
+#include "search/History.h"
+#include "search/TTable.h"
 
 #include <atomic>
-#include <iostream>
 #include <string>
+#include <vector>
 
 namespace pali {
 

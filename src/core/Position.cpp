@@ -1,14 +1,14 @@
 #include "Position.h"
 
-#include "../nnue/Network.h"
-#include "Attacks.h"
-#include "Bitboard.h"
-#include "Color.h"
-#include "Move.h"
-#include "Piece.h"
-#include "Square.h"
-#include "Util.h"
-#include "Zobrist.h"
+#include "core/Attacks.h"
+#include "core/Bitboard.h"
+#include "core/Color.h"
+#include "core/Move.h"
+#include "core/Piece.h"
+#include "core/Square.h"
+#include "core/Util.h"
+#include "core/Zobrist.h"
+#include "nnue/Network.h"
 
 #include <algorithm>
 #include <cctype>

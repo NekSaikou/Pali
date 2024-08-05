@@ -1,18 +1,18 @@
 #pragma once
 
-#include "../nnue/Network.h"
-#include "Bitboard.h"
-#include "Color.h"
-#include "Move.h"
-#include "Piece.h"
-#include "Square.h"
-#include "Zobrist.h"
+#include "core/Bitboard.h"
+#include "core/Color.h"
+#include "core/Move.h"
+#include "core/Piece.h"
+#include "core/Square.h"
+#include "core/Zobrist.h"
+#include "nnue/Network.h"
 
 #include <array>
 #include <cstdint>
 #include <cstdlib>
 #include <string>
-#include <utility>
+#include <vector>
 
 namespace pali {
 
@@ -114,7 +114,7 @@ public:
     for (int i = static_cast<int>(OccuredPos.size()) - 2; i >= 0; i -= 2) {
       if (i + Hmc < OccuredPos.size())
         return false;
-  
+
       if (OccuredPos[i] == Hash)
         return true;
     }

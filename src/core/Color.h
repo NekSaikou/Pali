@@ -13,9 +13,9 @@ private:
   Type Data;
 
 public:
-  constexpr Color() : Data(None){};
+  constexpr Color() : Data(None) {};
 
-  constexpr Color(Color::Type Col) : Data(Col){};
+  constexpr Color(Color::Type Col) : Data(Col) {};
 
   [[nodiscard]] operator int() const { return Data; }
 

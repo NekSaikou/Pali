@@ -1,10 +1,9 @@
 #pragma once
 
-#include "Piece.h"
-#include "Square.h"
-#include "Util.h"
+#include "core/Piece.h"
+#include "core/Square.h"
+#include "core/Util.h"
 
-#include <array>
 #include <cstdint>
 #include <string>
 #include <tuple>

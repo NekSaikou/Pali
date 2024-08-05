@@ -1,11 +1,11 @@
 #include "Commands.h"
 
-#include "../core/Move.h"
-#include "../core/Position.h"
-#include "../search/History.h"
-#include "../search/SearchThread.h"
-#include "../search/TTable.h"
-#include "Perft.h"
+#include "core/Move.h"
+#include "core/Position.h"
+#include "search/History.h"
+#include "search/SearchThread.h"
+#include "search/TTable.h"
+#include "uci/Perft.h"
 
 #include <atomic>
 #include <cstdint>
@@ -168,14 +168,12 @@ void pali::command::go(const std::vector<std::string> &Params,
   HelperThreads.reserve(Opts.Threads - 1);
   HelperHTables.reserve(Opts.Threads - 1);
   for (int i = 0; i < Opts.Threads - 1; ++i) {
-    SearchThread St = SearchThread(Stopped, Time, Inc, movetime, movestogo, depth,
-                                   nodes, Opts.MultiPV, TTable, HelperHTables[i]);
+    SearchThread St =
+        SearchThread(Stopped, Time, Inc, movetime, movestogo, depth, nodes,
+                     Opts.MultiPV, TTable, HelperHTables[i]);
     HelperHTables.push_back(HTable);
     HelperThreads.emplace_back(std::thread(
-        [&](Position Pos) {
-        SearchThread(St).go<false>(Pos);
-        },
-        RootPos));
+        [&](Position Pos) { SearchThread(St).go<false>(Pos); }, RootPos));
   }
 }
 

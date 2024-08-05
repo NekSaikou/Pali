@@ -1,12 +1,11 @@
 #pragma once
 
-#include "../core/Move.h"
-#include "../core/Position.h"
-#include "History.h"
+#include "core/Move.h"
+#include "core/Piece.h"
+#include "core/Position.h"
+#include "search/History.h"
 
-#include <array>
 #include <cstdint>
-#include <utility>
 
 namespace pali {
 

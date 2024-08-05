@@ -1,9 +1,9 @@
-#include "SearchThread.h"
+#include "search/SearchThread.h"
 
-#include "../core/Move.h"
-#include "../core/Position.h"
-#include "MovePicker.h"
-#include "TTable.h"
+#include "core/Move.h"
+#include "core/Position.h"
+#include "search/MovePicker.h"
+#include "search/TTable.h"
 
 #include <algorithm>
 #include <cstdint>

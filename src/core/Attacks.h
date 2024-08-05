@@ -1,10 +1,8 @@
 #pragma once
 
-#include "Bitboard.h"
-#include "Color.h"
-#include "Square.h"
-
-#include <array>
+#include "core/Bitboard.h"
+#include "core/Color.h"
+#include "core/Square.h"
 
 namespace pali {
 

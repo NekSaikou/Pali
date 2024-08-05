@@ -1,8 +1,8 @@
 #include "Zobrist.h"
 
-#include "Color.h"
-#include "Piece.h"
-#include "Square.h"
+#include "core/Color.h"
+#include "core/Piece.h"
+#include "core/Square.h"
 
 #include <cstdint>
 #include <random>

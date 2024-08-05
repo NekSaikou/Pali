@@ -1,6 +1,5 @@
 #pragma once
 
-#include <array>
 #include <cmath>
 
 namespace pali {

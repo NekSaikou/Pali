@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Bitboard.h"
+#include "core/Bitboard.h"
 
 #include <array>
 #include <cstdint>

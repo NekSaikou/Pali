@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../core/Position.h"
+#include "core/Position.h"
 
 #include <atomic>
 #include <cstdint>

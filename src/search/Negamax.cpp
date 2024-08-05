@@ -2,12 +2,12 @@
 #include "SEE.h"
 #include "SearchThread.h"
 
-#include "../core/Move.h"
-#include "../core/Piece.h"
-#include "../core/Position.h"
-#include "../core/Util.h"
-#include "MovePicker.h"
-#include "TTable.h"
+#include "core/Move.h"
+#include "core/Piece.h"
+#include "core/Position.h"
+#include "core/Util.h"
+#include "search/MovePicker.h"
+#include "search/TTable.h"
 
 #include <algorithm>
 #include <cstdint>

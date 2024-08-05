@@ -1,4 +1,4 @@
-#include "Network.h"
+#include "nnue/Network.h"
 
 #include <fstream>
 #include <ios>

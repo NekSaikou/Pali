@@ -1,4 +1,5 @@
 build/
 bin/
+.cache
 .clangd
 *log.*

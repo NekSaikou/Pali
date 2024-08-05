@@ -1,8 +1,9 @@
 #pragma once
 
-#include "../core/Position.h"
-#include "History.h"
-#include "TTable.h"
+#include "core/Move.h"
+#include "core/Position.h"
+#include "search/History.h"
+#include "search/TTable.h"
 
 #include <algorithm>
 #include <array>

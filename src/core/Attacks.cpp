@@ -1,8 +1,8 @@
-#include "Attacks.h"
-#include "Bitboard.h"
-#include "Color.h"
-#include "Magic.h"
-#include "Square.h"
+#include "core/Attacks.h"
+#include "core/Bitboard.h"
+#include "core/Color.h"
+#include "core/Magic.h"
+#include "core/Square.h"
 
 #include <array>
 #include <cstdint>

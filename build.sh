@@ -8,8 +8,7 @@ fi
 
 cd build/
 
-cmake -DCMAKE_CXX_COMPILER=clang++\
-      -D CMAKE_BUILD_TYPE=Debug ..
+cmake -DCMAKE_CXX_COMPILER=clang++ ..
 
 cmake --build .
 

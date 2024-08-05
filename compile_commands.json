@@ -1,0 +1,74 @@
+[
+{
+  "directory": "/home/Nek/Code/Chess/Rewrite/build",
+  "command": "/usr/bin/clang++ -DRELEASE_BUILD -DVERSION_NUMBER=0.1 -I/home/Nek/Code/Chess/Rewrite/src -std=gnu++23 -O3 -flto -funroll-loops -fno-exceptions -march=native -Wall -pedantic -o CMakeFiles/Pali.dir/src/Main.cpp.o -c /home/Nek/Code/Chess/Rewrite/src/Main.cpp",
+  "file": "/home/Nek/Code/Chess/Rewrite/src/Main.cpp",
+  "output": "CMakeFiles/Pali.dir/src/Main.cpp.o"
+},
+{
+  "directory": "/home/Nek/Code/Chess/Rewrite/build",
+  "command": "/usr/bin/clang++ -DRELEASE_BUILD -DVERSION_NUMBER=0.1 -I/home/Nek/Code/Chess/Rewrite/src -std=gnu++23 -O3 -flto -funroll-loops -fno-exceptions -march=native -Wall -pedantic -o CMakeFiles/Pali.dir/src/core/Attacks.cpp.o -c /home/Nek/Code/Chess/Rewrite/src/core/Attacks.cpp",
+  "file": "/home/Nek/Code/Chess/Rewrite/src/core/Attacks.cpp",
+  "output": "CMakeFiles/Pali.dir/src/core/Attacks.cpp.o"
+},
+{
+  "directory": "/home/Nek/Code/Chess/Rewrite/build",
+  "command": "/usr/bin/clang++ -DRELEASE_BUILD -DVERSION_NUMBER=0.1 -I/home/Nek/Code/Chess/Rewrite/src -std=gnu++23 -O3 -flto -funroll-loops -fno-exceptions -march=native -Wall -pedantic -o CMakeFiles/Pali.dir/src/core/Position.cpp.o -c /home/Nek/Code/Chess/Rewrite/src/core/Position.cpp",
+  "file": "/home/Nek/Code/Chess/Rewrite/src/core/Position.cpp",
+  "output": "CMakeFiles/Pali.dir/src/core/Position.cpp.o"
+},
+{
+  "directory": "/home/Nek/Code/Chess/Rewrite/build",
+  "command": "/usr/bin/clang++ -DRELEASE_BUILD -DVERSION_NUMBER=0.1 -I/home/Nek/Code/Chess/Rewrite/src -std=gnu++23 -O3 -flto -funroll-loops -fno-exceptions -march=native -Wall -pedantic -o CMakeFiles/Pali.dir/src/core/Zobrist.cpp.o -c /home/Nek/Code/Chess/Rewrite/src/core/Zobrist.cpp",
+  "file": "/home/Nek/Code/Chess/Rewrite/src/core/Zobrist.cpp",
+  "output": "CMakeFiles/Pali.dir/src/core/Zobrist.cpp.o"
+},
+{
+  "directory": "/home/Nek/Code/Chess/Rewrite/build",
+  "command": "/usr/bin/clang++ -DRELEASE_BUILD -DVERSION_NUMBER=0.1 -I/home/Nek/Code/Chess/Rewrite/src -std=gnu++23 -O3 -flto -funroll-loops -fno-exceptions -march=native -Wall -pedantic -o CMakeFiles/Pali.dir/src/nnue/Network.cpp.o -c /home/Nek/Code/Chess/Rewrite/src/nnue/Network.cpp",
+  "file": "/home/Nek/Code/Chess/Rewrite/src/nnue/Network.cpp",
+  "output": "CMakeFiles/Pali.dir/src/nnue/Network.cpp.o"
+},
+{
+  "directory": "/home/Nek/Code/Chess/Rewrite/build",
+  "command": "/usr/bin/clang++ -DRELEASE_BUILD -DVERSION_NUMBER=0.1 -I/home/Nek/Code/Chess/Rewrite/src -std=gnu++23 -O3 -flto -funroll-loops -fno-exceptions -march=native -Wall -pedantic -o CMakeFiles/Pali.dir/src/search/Deepening.cpp.o -c /home/Nek/Code/Chess/Rewrite/src/search/Deepening.cpp",
+  "file": "/home/Nek/Code/Chess/Rewrite/src/search/Deepening.cpp",
+  "output": "CMakeFiles/Pali.dir/src/search/Deepening.cpp.o"
+},
+{
+  "directory": "/home/Nek/Code/Chess/Rewrite/build",
+  "command": "/usr/bin/clang++ -DRELEASE_BUILD -DVERSION_NUMBER=0.1 -I/home/Nek/Code/Chess/Rewrite/src -std=gnu++23 -O3 -flto -funroll-loops -fno-exceptions -march=native -Wall -pedantic -o CMakeFiles/Pali.dir/src/search/LogTable.cpp.o -c /home/Nek/Code/Chess/Rewrite/src/search/LogTable.cpp",
+  "file": "/home/Nek/Code/Chess/Rewrite/src/search/LogTable.cpp",
+  "output": "CMakeFiles/Pali.dir/src/search/LogTable.cpp.o"
+},
+{
+  "directory": "/home/Nek/Code/Chess/Rewrite/build",
+  "command": "/usr/bin/clang++ -DRELEASE_BUILD -DVERSION_NUMBER=0.1 -I/home/Nek/Code/Chess/Rewrite/src -std=gnu++23 -O3 -flto -funroll-loops -fno-exceptions -march=native -Wall -pedantic -o CMakeFiles/Pali.dir/src/search/MovePicker.cpp.o -c /home/Nek/Code/Chess/Rewrite/src/search/MovePicker.cpp",
+  "file": "/home/Nek/Code/Chess/Rewrite/src/search/MovePicker.cpp",
+  "output": "CMakeFiles/Pali.dir/src/search/MovePicker.cpp.o"
+},
+{
+  "directory": "/home/Nek/Code/Chess/Rewrite/build",
+  "command": "/usr/bin/clang++ -DRELEASE_BUILD -DVERSION_NUMBER=0.1 -I/home/Nek/Code/Chess/Rewrite/src -std=gnu++23 -O3 -flto -funroll-loops -fno-exceptions -march=native -Wall -pedantic -o CMakeFiles/Pali.dir/src/search/Negamax.cpp.o -c /home/Nek/Code/Chess/Rewrite/src/search/Negamax.cpp",
+  "file": "/home/Nek/Code/Chess/Rewrite/src/search/Negamax.cpp",
+  "output": "CMakeFiles/Pali.dir/src/search/Negamax.cpp.o"
+},
+{
+  "directory": "/home/Nek/Code/Chess/Rewrite/build",
+  "command": "/usr/bin/clang++ -DRELEASE_BUILD -DVERSION_NUMBER=0.1 -I/home/Nek/Code/Chess/Rewrite/src -std=gnu++23 -O3 -flto -funroll-loops -fno-exceptions -march=native -Wall -pedantic -o CMakeFiles/Pali.dir/src/search/QSearch.cpp.o -c /home/Nek/Code/Chess/Rewrite/src/search/QSearch.cpp",
+  "file": "/home/Nek/Code/Chess/Rewrite/src/search/QSearch.cpp",
+  "output": "CMakeFiles/Pali.dir/src/search/QSearch.cpp.o"
+},
+{
+  "directory": "/home/Nek/Code/Chess/Rewrite/build",
+  "command": "/usr/bin/clang++ -DRELEASE_BUILD -DVERSION_NUMBER=0.1 -I/home/Nek/Code/Chess/Rewrite/src -std=gnu++23 -O3 -flto -funroll-loops -fno-exceptions -march=native -Wall -pedantic -o CMakeFiles/Pali.dir/src/uci/Commands.cpp.o -c /home/Nek/Code/Chess/Rewrite/src/uci/Commands.cpp",
+  "file": "/home/Nek/Code/Chess/Rewrite/src/uci/Commands.cpp",
+  "output": "CMakeFiles/Pali.dir/src/uci/Commands.cpp.o"
+},
+{
+  "directory": "/home/Nek/Code/Chess/Rewrite/build",
+  "command": "/usr/bin/clang++ -DRELEASE_BUILD -DVERSION_NUMBER=0.1 -I/home/Nek/Code/Chess/Rewrite/src -std=gnu++23 -O3 -flto -funroll-loops -fno-exceptions -march=native -Wall -pedantic -o CMakeFiles/Pali.dir/src/uci/Perft.cpp.o -c /home/Nek/Code/Chess/Rewrite/src/uci/Perft.cpp",
+  "file": "/home/Nek/Code/Chess/Rewrite/src/uci/Perft.cpp",
+  "output": "CMakeFiles/Pali.dir/src/uci/Perft.cpp.o"
+}
+]

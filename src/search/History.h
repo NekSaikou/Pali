@@ -1,15 +1,15 @@
 #pragma once
 
-#include "../core/Color.h"
-#include "../core/Move.h"
+#include "core/Color.h"
+#include "core/Move.h"
+#include "core/Util.h"
 
-#include <algorithm>
 #include <array>
 #include <cstdlib>
 
 namespace pali {
 
-constexpr int MH_CAP = 8192;
+constexpr int MH_CAP = 16384;
 
 struct HTable {
   std::array<std::array<std::array<int, 64>, 64>, 2> MainHist{};
