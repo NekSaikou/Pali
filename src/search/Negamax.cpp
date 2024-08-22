@@ -104,6 +104,7 @@ int SearchThread::negamax(const Position &Pos, int Depth, int Ply, int α,
       const_cast<Position &>(Pos).changeSide();
 
       if (NmpScore >= β)
+        // Prevent returning false mate
         return NmpScore >= MATE_SCORE - MAX_PLY ? β : NmpScore;
     }
   }

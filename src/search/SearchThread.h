@@ -2,6 +2,7 @@
 
 #include "core/Move.h"
 #include "core/Position.h"
+#include "core/Util.h"
 #include "search/History.h"
 #include "search/TTable.h"
 
@@ -9,6 +10,7 @@
 #include <array>
 #include <atomic>
 #include <cstdint>
+#include <vector>
 
 namespace pali {
 
